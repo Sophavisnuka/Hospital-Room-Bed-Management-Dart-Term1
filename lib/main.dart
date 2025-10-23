@@ -1,4 +1,4 @@
-import './Ui/hospital_console.dart';
+import 'ui/hospital_console.dart';
 import 'dart:io';
 
 void main () {
