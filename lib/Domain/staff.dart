@@ -12,21 +12,24 @@ final uuid = Uuid();
 
 class Staff extends Person {
   final String id;
-  final WorkShift workShift;
-  final String position;
+  final WorkShift _workShift;
+  final String _position;
+  final List<String> _admissionId;
 
   Staff({
     final String? id,
-    required final String name,
-    required final int age,
-    required final String gender,
-    required final String phone,
-    required final String dateOfBirth,
+    required String name,
+    required int age,
+    required String gender,
+    required String phone,
+    required String dateOfBirth,
     required final WorkShift workShift,
     required final String position,
+    required final List<String> admissionId,
   }): id = id ?? uuid.v4(),
-      workShift = workShift,
-      position = position,
+      _workShift = workShift,
+      _position = position,
+      _admissionId = admissionId,
       super(
         name: name,
         age: age,
@@ -34,4 +37,8 @@ class Staff extends Person {
         phone: phone,
         dateOfBirth: dateOfBirth,
       );
-  }
+
+  WorkShift get workShift => _workShift;
+  String get position => _position;
+  List<String> get admissionId => _admissionId;
+}
