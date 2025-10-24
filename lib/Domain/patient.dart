@@ -7,6 +7,8 @@ class Patient extends Person {
   final String id;
   final String? _reason;
   final int? _nights;
+  // final List<Booking> bookings;
+  final String _admissionId;
 
   Patient({
     final String? id,
@@ -17,9 +19,11 @@ class Patient extends Person {
     final String? dateOfBirth,
     final String? reason,
     final int? nights = 1,
+    required String admissionId,
   }): id = id ?? uuid.v4(),
       _reason = reason,
       _nights = nights,
+      _admissionId = admissionId,
       super(
         name: name,
         age: age,
@@ -30,4 +34,5 @@ class Patient extends Person {
 
   String? get reason => _reason;
   int? get nights => _nights;
+  String get admissionId => _admissionId;
 }
