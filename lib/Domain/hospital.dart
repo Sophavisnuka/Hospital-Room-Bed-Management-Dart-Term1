@@ -4,8 +4,9 @@ import 'package:my_first_project/Domain/staff.dart';
 import 'package:my_first_project/Domain/patient.dart';
 import 'package:my_first_project/Domain/bed.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:io';
-import 'dart:convert';
+import '../Data/hospital_repository.dart';
+// import 'dart:io';
+// import 'dart:convert';
 
 const uuid = Uuid();
 
@@ -20,6 +21,8 @@ class Hospital {
   List<Admission> _admission;
   List<Staff> _staff;
 
+  final HospitalRepository _repository = HospitalRepository();
+
   Hospital({required String name, required String address})  
   : _name = name,
     _address = address,
@@ -32,20 +35,36 @@ class Hospital {
     _id = uuid.v4();
 
   List<Patient> get patients => _patient;
+  List<Room> get room => _room;
 
-  
-  // HOSPITAL METHODS
-  void addRoom(Room room) {
-    _room.add(room);
+  // Load all data from JSON files
+  Future<void> loadAllData() async {
+    _patient = await _repository.loadData('patient_data.json', (map) => Patient.fromMap(map));
+    _room = await _repository.loadData('room_data.json', (map) => Room.fromMap(map));
+    // _admission = await _repository.getAllAdmissions();
+    print('Loaded ${_patient.length} patients');
+    print('Loaded ${_room.length} rooms');
   }
-  void registerPatient(Patient patient) {
+
+  // method for room
+  Future<void> addRoom(Room room) async {
+    // Check if room number already exists
+    _room.add(room);
+    _room.sort((a, b) => a.roomNumber.compareTo(b.roomNumber));
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    print("Room added and data saved successfully!");
+  }
+  // method for patient
+  Future<void> registerPatient(Patient patient) async {
     if (patient.age < 0) {
       print("Invalid age. Patient not registered.");
       return;
     }
     patients.add(patient);
+    await _repository.saveData('patient_data.json', _patient, (p) => p.toMap());
+    print("\nPatient registered successfully!\n");
   }
-  void editPatient(Patient updatedPatient) {
+  Future<void> editPatient(Patient updatedPatient) async {
     final index = _patient.indexWhere((p) => p.id == updatedPatient.id);
     if (index == -1) {
       print("Patient not found.");
@@ -54,13 +73,28 @@ class Hospital {
 
     _patient[index] = updatedPatient;
     print("Patient '${updatedPatient.name}' updated successfully!");
-    saveToJson();
+    await _repository.saveData('patient_data.json', _patient, (p) => p.toMap());
+    print('Patient updated successfully');
   }
-  void deletePatient(String patientName) {
+  Future<void> deletePatient(String patientName) async {
     final patient = patients.firstWhere((p) => p.name == patientName);
     patients.remove(patient);
     print('Patient has been deleted.');
-    saveToJson();
+    await _repository.saveData('patient_data.json', _patient, (p) => p.toMap());
+    print('Patient deleted successfully');
+  }
+  void searchPatient(String keyword) {
+    // Implementation for searching a patient
+    final matches = patients.where((p) => p.name.toLowerCase().contains(keyword.toLowerCase())).toList();
+
+    if (matches.isEmpty) {
+      print('No patients found matching "$keyword".');
+    } else {
+      print('Found ${matches.length} patient(s):');
+      for (var p in matches) {
+        print(p);
+      }
+    }
   }
   void admitPatient(Patient patient, Room room, Bed bed, Staff staff) {
     // Implementation for admitting a patient
@@ -74,27 +108,25 @@ class Hospital {
   void calculateBilling(String admissionId) {
     // Implementation for calculating billing
   }
-  void saveToJson() {
-    // Implementation for saving to JSON
-    final file = File('lib/Data/patient_data.json');
-    if (file.existsSync() == false) {
-      throw Exception("File not found");
-    }
-    final data = _patient.map((p) => p.toMap()).toList();
-    
-    const encoder = JsonEncoder.withIndent('  ');
-    file.writeAsStringSync(encoder.convert(data));
-    print("Patients saved to patients.json");
-  }
-  void loadFromJson() {
-    final file = File('lib/data/patient_data.json');
-    if (file.existsSync()) {
-      final content = file.readAsStringSync();
-      final List decoded = jsonDecode(content);
-      _patient = decoded.map((e) => Patient.fromMap(e)).toList();
-      print("Loaded ${_patient.length} patients from JSON");
-    } else {
-      print("No existing patients.json found. Starting fresh.");
-    }
-  }
+  // Future<void> loadFromJson() async {
+  //   try {
+  //     _patient = await _repository.getAllPatients();
+  //     _room = await _repository.getAllRooms();
+  //     // _admission = await _repository.getAllAdmissions();
+  //     print('Data loaded successfully');
+  //   } catch (e) {
+  //     print('Error loading data: $e');
+  //   }
+  // }
+
+  // Future<void> saveToJson() async {
+  //   try {
+  //     await _repository.savePatients(_patient);
+  //     await _repository.saveRooms(_room);
+  //     // await _repository.saveAdmissions(_admission);
+  //     print('Data saved successfully');
+  //   } catch (e) {
+  //     print('Error saving data: $e');
+  //   }
+  // }
 }
