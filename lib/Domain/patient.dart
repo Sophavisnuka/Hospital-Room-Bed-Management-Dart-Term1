@@ -7,8 +7,6 @@ class Patient extends Person {
   final String id;
   final String? _reason;
   final int? _nights;
-  // final List<Booking> bookings;
-  final String _admissionId;
 
   Patient({
     final String? id,
@@ -19,11 +17,9 @@ class Patient extends Person {
     final String? dateOfBirth,
     final String? reason,
     final int? nights = 1,
-    required String admissionId,
   }): id = id ?? uuid.v4(),
       _reason = reason,
       _nights = nights,
-      _admissionId = admissionId,
       super(
         name: name,
         age: age,
@@ -31,8 +27,38 @@ class Patient extends Person {
         phone: phone,
         dateOfBirth: dateOfBirth,
       );
-
+      
   String? get reason => _reason;
   int? get nights => _nights;
-  String get admissionId => _admissionId;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'age': age,
+      'gender': gender,
+      'phone': phone,
+      'date of birth': dateOfBirth,
+      'reason': _reason,
+      'nights': _nights,
+    };
+  }
+
+  factory Patient.fromMap(Map<String, dynamic> map) {
+    return Patient(
+      id: map['id'],
+      name: map['name'],
+      age: map['age'],
+      gender: map['gender'],
+      phone: map['phone'],
+      dateOfBirth: map['date of birth'],
+      reason: map['reason'],
+      nights: map['nights'],
+    );
+  }
+
+  @override
+  String toString() {
+    return '\nPatient id: $id, \nname: $name, \nage: $age, \ngender: $gender, \nphone: $phone, dateOfBirth: $dateOfBirth, reason: $_reason, nights: $_nights';
+  }
 }

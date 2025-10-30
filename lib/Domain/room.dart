@@ -1,32 +1,64 @@
 import 'package:uuid/uuid.dart';
+import 'package:my_first_project/Domain/bed.dart';
+import 'package:my_first_project/Domain/standardRoom.dart';
+import 'package:my_first_project/Domain/vipRoom.dart';
 
 enum RoomType {
   normal,
-  vip_shared,
-  vip_single,
+  vip,
 }
 
 const uuid = Uuid();
-class Room{
-  final String id;
-  final List<String> _bedId;
-  final RoomType _roomType;
-  final List<String> _patientId;
-  final bool _isClean;
+
+abstract class Room {
+  String id;
+  final int roomNumber;
+  final List<Bed> beds;
+  final RoomType roomType;
+  final double basePrice;
+  bool isAvailable;
 
   Room({
-    required String? id,
-    required final List<String> bedId,
-    required final RoomType roomType,
-    required final List<String> patientId,
-    required final bool isClean,
-  }): id = id ?? uuid.v4(),
-      _bedId = bedId,
-       _roomType = roomType,
-       _patientId = patientId,
-       _isClean = isClean;
-  List<String> get bedId => _bedId;
-  RoomType get roomType => _roomType;
-  List<String> get patientId => _patientId;
-  bool get isClean => _isClean;
+    String? id,
+    required this.basePrice,
+    required this.roomNumber,
+    required this.beds,
+    required this.roomType,
+    this.isAvailable = true,
+  })  : id = id ?? uuid.v4();
+
+  // Getters
+  int get roomNum => roomNumber;
+
+  set roomNum(int roomNumber) {
+    if (roomNumber <= 0) {
+      throw ArgumentError("Room number must be positive.");
+    }
+  }
+
+  bool isAvailableBed(Bed bed) {
+    return bed.status == BedStatus.available;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'roomNumber': roomNumber,
+      'roomType': roomType.toString().split('.').last,
+      'basePrice': basePrice,
+      'bed quality': beds.length,
+      'beds': beds.map((bed) => bed.toMap()).toList(),
+      'isAvailable': isAvailable,
+    };
+  }
+  factory Room.fromMap(Map<String, dynamic> map) {
+    final type = RoomType.values.firstWhere(
+      (e) => e.toString() == map['type']
+    );
+    switch (type) {
+      case RoomType.normal:
+        return StandardRoom.fromMap(map);
+      case RoomType.vip:
+        return VIPRoom.fromMap(map);
+    }
+  }
 }
