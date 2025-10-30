@@ -59,6 +59,20 @@ class Patient extends Person {
 
   @override
   String toString() {
-    return '\nPatient id: $id, \nname: $name, \nage: $age, \ngender: $gender, \nphone: $phone, dateOfBirth: $dateOfBirth, reason: $_reason, nights: $_nights';
+    return 
+    """
+=========================================
+Patient Details:
+=========================================
+Patient id: $id, 
+name: $name, 
+age: $age, 
+gender: $gender, 
+phone: $phone, 
+dateOfBirth: $dateOfBirth, 
+reason: $_reason, 
+nights: $_nights
+=========================================
+    """;
   }
 }

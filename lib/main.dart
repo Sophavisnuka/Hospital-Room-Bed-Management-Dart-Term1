@@ -3,48 +3,56 @@ import 'Domain/hospital.dart';
 import 'Ui/patient_console.dart';
 import 'Ui/admission_console.dart';
 import 'Ui/room_console.dart';
+import 'Util/console_utils.dart';
 
 Future<void> main() async {
   final hospital = Hospital(name: "City Hospital", address: "123 Main St");
   
   // Load existing data from JSON files BEFORE showing menu
+  clearScreen();
+  print('=========================================');
   print('Loading hospital data...');
   await hospital.loadAllData();
-  print('Data loaded successfully!\n');
+  print('Data loaded successfully!');
+  print('=========================================');
+
   
   PatientConsole patientConsole = PatientConsole(hospital);
   AdmissionConsole admissionConsole = AdmissionConsole(hospital);
   RoomConsole roomConsole = RoomConsole(hospital);
 
   while (true) {
-    print('\n========================================');
+    print('\n=========================================');
     print('Welcome to the Hospital Management System');
-    print('========================================');
+    print('=========================================');
     print('1. Manage Patients');
     print('2. Manage Rooms');
     print('3. Manage Admissions');
-    print('4. Exit Program');
+    print('=========================================');
+    print('0. Exit Program');
+    print('=========================================');
     stdout.write('Your choice: ');
     
     String? input = stdin.readLineSync();
+    clearScreen();
     switch(input) {
       case '1':
-        print('\nPatient Menu..');
         await patientConsole.displayPatientUi();
         break;
       case '2':
-        print('\nRooms Menu..');
         await roomConsole.displayRoomUi();
         break;
       case '3':
-        print('\nAdmission Menu..');
         await admissionConsole.displayAdmissionUi();
         break;
-      case '4':
-        print('\nThank you for using Hospital Management System!');
+      case '0':
+        print('\n=========================================');
+        print('Thank you for using Hospital Management System!');
+        print('=========================================');
         exit(0);
       default:
         print('Invalid choice. Please select a valid option.');
+        pressEnterToContinue();
     }
   }
 }
