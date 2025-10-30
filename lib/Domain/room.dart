@@ -52,7 +52,7 @@ abstract class Room {
   }
   factory Room.fromMap(Map<String, dynamic> map) {
     final type = RoomType.values.firstWhere(
-      (e) => e.toString() == map['type']
+      (e) => e.toString().split('.').last == map['roomType']
     );
     switch (type) {
       case RoomType.normal:

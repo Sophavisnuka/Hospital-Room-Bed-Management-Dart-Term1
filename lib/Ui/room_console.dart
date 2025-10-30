@@ -3,16 +3,16 @@ import 'package:my_first_project/Domain/hospital.dart';
 import 'package:my_first_project/Domain/bed.dart';
 import 'package:my_first_project/Domain/standardRoom.dart';
 import 'package:my_first_project/Domain/vipRoom.dart';
+import 'package:my_first_project/Util/console_utils.dart';
 
 class RoomConsole {
-  
   final Hospital hospital;
   RoomConsole(this.hospital);
 
   Future<void> createRoom() async {
     // Create a standard room with 4 beds
     print("\n--- Add New Room ---");
-    
+
     // Choose room type
     print("Select room type:");
     print("1. Standard Room");
@@ -23,7 +23,7 @@ class RoomConsole {
     // Get room number
     stdout.write("Enter room number: ");
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
-    
+
     if (roomNumber == null || roomNumber <= 0) {
       print("Invalid room number. Room not created.");
       return;
@@ -43,23 +43,20 @@ class RoomConsole {
         print("Invalid number of beds. Room not created.");
         return;
       } else {
-        List<Bed> beds = List.generate(bedCount, (i) => Bed(
-          bedNumber: "$roomNumber-${i+1}", 
-          id: null, 
-          status: BedStatus.available
-        ));
+        List<Bed> beds = List.generate(
+            bedCount,
+            (i) => Bed(
+                bedNumber: "$roomNumber-${i + 1}",
+                id: null,
+                status: BedStatus.available));
 
-        final standardRoom = StandardRoom(
-          roomNumber: roomNumber, 
-          beds: beds
-        );
+        final standardRoom = StandardRoom(roomNumber: roomNumber, beds: beds);
 
         await hospital.addRoom(standardRoom);
-        print("Standard Room $roomNumber added successfully!"); 
+        print("Standard Room $roomNumber added successfully!");
       }
-
     } else if (typeChoice == 2) {
-       // VIP Room (typically 1 bed)
+      // VIP Room (typically 1 bed)
       stdout.write("Does this VIP room have a lounge? (y/n): ");
       bool hasLounge = stdin.readLineSync()!.toLowerCase() == 'y';
 
@@ -67,15 +64,11 @@ class RoomConsole {
       bool hasPrivateBathroom = stdin.readLineSync()!.toLowerCase() == 'y';
 
       List<Bed> beds = [
-        Bed(
-          bedNumber: "$roomNumber-1", 
-          id: null, 
-          status: BedStatus.available
-        )
+        Bed(bedNumber: "$roomNumber-1", id: null, status: BedStatus.available)
       ];
 
       final vipRoom = VIPRoom(
-        roomNumber: roomNumber, 
+        roomNumber: roomNumber,
         beds: beds,
         hasLounge: hasLounge,
         hasPrivateBathroom: hasPrivateBathroom,
@@ -106,36 +99,47 @@ class RoomConsole {
       print("------------------------------");
     }
   }
+
   Future<void> displayRoomUi() async {
     while (true) {
       // Implementation for displaying the UI
-      print("\nHospital Management System UI");
-      print("------------------------------");
+      print("\n=========================================");
+      print("\nHospital Management System - Rooms");
+      print("\n=========================================");
       print("1. View All Rooms");
       print("2. Add New Rooms");
       print("3. Edit Room");
       print('4. Delete Room');
       print("5. Change Room Status");
-      print("6. Exit");
+      print("=========================================");
+      print("0. Back to Main Menu");
+      print("=========================================");
       stdout.write('Your choice: ');
       String? input = stdin.readLineSync();
+      clearScreen();
       switch (input) {
-        case '1': 
+        case '1':
           await viewAllRooms();
+          pressEnterToContinue();
           break;
         case '2':
           await createRoom();
+          pressEnterToContinue();
           break;
         case '3':
+          pressEnterToContinue();
           break;
         case '4':
+          pressEnterToContinue();
           break;
         case '5':
+          pressEnterToContinue();
           break;
-        case '6':
+        case '0':
           return;
         default:
           print('Invalid choice. Please select a valid option.');
+          pressEnterToContinue();
       }
     }
   }
