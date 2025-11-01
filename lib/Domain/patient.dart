@@ -30,6 +30,7 @@ class Patient extends Person {
       
   String? get reason => _reason;
   int? get nights => _nights;
+  String get patientName => name;
 
   Map<String, dynamic> toMap() {
     return {

@@ -11,7 +11,7 @@ enum BedStatus {
 
 class Bed {
   final String id;
-  final BedStatus _status;
+  BedStatus _status;
   final String bedNumber;
 
   Bed({
@@ -20,7 +20,13 @@ class Bed {
     required this.bedNumber,
   }): id = id ?? uuid.v4(),
       _status = status;
-  BedStatus get status => _status;
+  BedStatus get getStatus => _status;
+
+  set setStatus(BedStatus status) {
+    // Normally, you'd have logic here to update the status
+    // For simplicity, we're not implementing it fully
+    _status = status;
+  }
 
   Map<String, dynamic> toMap() {
     return {

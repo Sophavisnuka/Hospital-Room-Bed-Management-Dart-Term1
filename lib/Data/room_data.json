@@ -13,17 +13,17 @@
       },
       {
         "id": "9152eb0e-c25d-40a6-b408-d5322e28be13",
-        "status": "available",
+        "status": "occupied",
         "bedNumber": "101-2"
       },
       {
         "id": "bab6608c-7c6d-4c33-aa15-a6fad0833fef",
-        "status": "available",
+        "status": "cleaning",
         "bedNumber": "101-3"
       },
       {
         "id": "2842e7f7-92f8-4cd8-9307-1ea7d9455e8e",
-        "status": "available",
+        "status": "occupied",
         "bedNumber": "101-4"
       },
       {
@@ -103,5 +103,35 @@
       }
     ],
     "isAvailable": true
+  },
+  {
+    "id": "9876c077-7373-4fec-b882-415b33790ebb",
+    "roomNumber": 201,
+    "roomType": "normal",
+    "basePrice": 100.0,
+    "bed quality": 4,
+    "beds": [
+      {
+        "id": "1ee6706c-1ce4-4cab-a647-9c604ff4043e",
+        "status": "occupied",
+        "bedNumber": "201-1"
+      },
+      {
+        "id": "35fd3409-8ba3-477c-885e-935da4817adc",
+        "status": "cleaning",
+        "bedNumber": "201-2"
+      },
+      {
+        "id": "99785dc1-c979-4f95-827b-76ab8e9e79e5",
+        "status": "maintenance",
+        "bedNumber": "201-3"
+      },
+      {
+        "id": "c7f17981-06c8-435c-b7bd-cb73dc07c4a3",
+        "status": "occupied",
+        "bedNumber": "201-4"
+      }
+    ],
+    "isAvailable": false
   }
 ]

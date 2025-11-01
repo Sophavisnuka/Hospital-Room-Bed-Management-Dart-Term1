@@ -5,8 +5,6 @@ import 'package:my_first_project/Domain/patient.dart';
 import 'package:my_first_project/Domain/bed.dart';
 import 'package:uuid/uuid.dart';
 import '../Data/hospital_repository.dart';
-// import 'dart:io';
-// import 'dart:convert';
 
 const uuid = Uuid();
 
@@ -34,8 +32,10 @@ class Hospital {
         _staff = [],
         _id = uuid.v4();
 
+  List<Bed> get beds => _bed;
   List<Patient> get patients => _patient;
-  List<Room> get room => _room;
+  List<Room> get rooms => _room;
+  List<Admission> get admissions => _admission;
 
   // Load all data from JSON files
   Future<void> loadAllData() async {
@@ -43,9 +43,12 @@ class Hospital {
         'patient_data.json', (map) => Patient.fromMap(map));
     _room = await _repository.loadData(
         'room_data.json', (map) => Room.fromMap(map));
+    _admission = await _repository.loadData(
+        'admission_data.json', (map) => Admission.fromMap(map));
     // _admission = await _repository.getAllAdmissions();
     print('Loaded ${_patient.length} patients');
     print('Loaded ${_room.length} rooms');
+    print('Loaded ${_admission.length} admissions');
   }
 
   // method for room
@@ -56,7 +59,28 @@ class Hospital {
     await _repository.saveData('room_data.json', _room, (r) => r.toMap());
     print("Room added and data saved successfully!");
   }
-
+  Future<String> editRoomStatus(int roomNumber, String bedNumber, BedStatus status) async {
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber,
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    final bed = room.beds.firstWhere(
+      (b) => b.bedNumber == bedNumber,
+      orElse: () => throw Exception('Bed $bedNumber not found.'),
+    );
+    String currentBedStatus = bed.getStatus.toString().split('.').last;
+    bed.setStatus = status;
+    // update room availability 
+    final availableBeds = room.beds.where((b) => b.getStatus == BedStatus.available).length;
+    if (availableBeds > 0) {
+      room.isAvailable = true;
+    } else {
+      room.isAvailable = false;
+    }
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    print('Bed $bedNumber status updated to ${status.toString().split('.').last}');
+    return currentBedStatus;
+  }
   // method for patient
   Future<void> registerPatient(Patient patient) async {
     if (patient.age < 0) {
@@ -104,38 +128,139 @@ class Hospital {
     }
   }
 
-  void admitPatient(Patient patient, Room room, Bed bed, Staff staff) {
+  Future<void> admitPatient(String patientName, int roomNumber, String bedNumber, DateTime admissionDate) async {
     // Implementation for admitting a patient
+    final patient = patients.firstWhere(
+      (p) => p.name == patientName,
+      orElse: () => throw Exception('Patient $patientName not found.'),
+    );
+    final checkPatientAdmission = _admission.where(
+      (a) => a.patient == patient.name && a.dischargeDate == null,
+    ).toList();
+    if (checkPatientAdmission.isNotEmpty) {
+      print('\nError: Patient ${patient.name} is already admitted!');
+      print('Current admission details:');
+      print('  Room: ${checkPatientAdmission.first.roomNumber}');
+      print('  Bed: ${checkPatientAdmission.first.bedNumber}');
+      print('  Admission Date: ${checkPatientAdmission.first.admissionDate}');
+      print('\nPlease use "Transfer Patient" option to move to another room.');
+      return;
+    }
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber, 
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    final bed = room.beds.firstWhere(
+      (b) => b.bedNumber == bedNumber, 
+      orElse: () => throw Exception('Bed $bedNumber not found.'),
+    );
+    // Check if the bed is available
+    if (bed.getStatus != BedStatus.available) {
+      print('Error: Bed $bedNumber in Room $roomNumber is not available.');
+      print('Current status: ${bed.getStatus}');
+      return;
+    }
+    // Check if all beds in the room are occupied (update room availability)
+    final availableBeds = room.beds.where((b) => b.getStatus == BedStatus.available).length;
+    if (availableBeds == 0) {
+      print('Error: Room $roomNumber has no available beds.');
+      return;
+    }
+    final admission = Admission(
+      patient: patient.name,
+      roomNumber: roomNumber, 
+      bedNumber: bedNumber,
+      admissionDate: admissionDate,
+    );
+    bed.setStatus = BedStatus.occupied;
+    // Add admission and save data
+    _admission.add(admission);
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    await _repository.saveData('admission_data.json', _admission, (a) => a.toMap());
+
+    print('\nPatient ${patient.name} admitted successfully!');
+    print('  Room: $roomNumber');
+    print('  Bed: $bedNumber');
+    print('  Available beds in room: ${availableBeds - 1}/${room.beds.length}');
   }
-  void transferPatient(
-      String admissionId, Room newRoom, Bed newBed, String reason) {
+
+  Future<void> transferPatient(String patientName, int currentRoomNum, String currentBedNum, String newBedNum, int newRoomNum, String transferReason) async {
     // Implementation for transferring a patient
+    final patient = patients.firstWhere(
+      (p) => p.name == patientName,
+      orElse: () => throw Exception('Patient $patientName not found.'),
+    );
+    final currentRoom = rooms.firstWhere(
+      (r) => r.roomNumber == currentRoomNum, 
+      orElse: () => throw Exception('Current Room $currentRoomNum not found.'),
+    );
+    final newRoom = rooms.firstWhere(
+      (r) => r.roomNumber == newRoomNum,
+      orElse: () => throw Exception('New Room $newRoomNum not found.'),
+    );
+    final currentBed = currentRoom.beds.firstWhere(
+      (b) => b.bedNumber == currentBedNum, 
+      orElse: () => throw Exception('Current Bed $currentBedNum not found.'),
+    );
+    final newBed = newRoom.beds.firstWhere(
+      (b) => b.bedNumber == newBedNum, 
+      orElse: () => throw Exception('New Bed $newBedNum not found.'),
+    ); 
+    // Check if current bed is occupied
+    if (currentBed.getStatus != BedStatus.occupied) {
+      print('Error: Current bed $currentBedNum is not occupied.');
+      return;
+    }
+    // Check if new bed is available
+    if (newBed.getStatus != BedStatus.available) {
+      print('Error: New bed $newBedNum in Room $newRoomNum is not available.');
+      print('Current status: ${newBed.getStatus}');
+      return;
+    }
+
+    //Find the current admission record 
+    final currentAdmission = _admission.firstWhere(
+      (a) => a.patient == patient.name && a.roomNumber == currentRoomNum && a.bedNumber == currentBedNum,
+      orElse: () => throw Exception('Current admission not found.')
+    );
+
+    currentBed.setStatus = BedStatus.available;
+    // Update old room availability if it was full
+    if (!currentRoom.isAvailable) {
+      currentRoom.isAvailable = true;
+    }
+    newBed.setStatus = BedStatus.occupied;
+    // Update new room availability if all beds are now occupied
+    if (newRoom.beds.every((b) => b.getStatus != BedStatus.available)) {
+      newRoom.isAvailable = false;
+    }
+
+    final newAdmission = Admission(
+      patient: patient.name,
+      roomNumber: newRoomNum,
+      bedNumber: newBedNum,
+      admissionDate: DateTime.now(),
+      transferReason: transferReason,
+      previousRoomNumber: currentRoomNum,
+      previousBedNumber: currentBedNum,
+    );
+    // Close the old admission record
+    currentAdmission.dischargeDate = DateTime.now();
+    currentAdmission.dischargeReason = 'Transferred to Room $newRoomNum';
+
+    _admission.add(newAdmission);
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    await _repository.saveData('admission_data.json', _admission, (a) => a.toMap());
+    print('\nPatient ${patient.name} transferred successfully!');
+    print('  From: Room $currentRoomNum, Bed $currentBedNum');
+    print('  To: Room $newRoomNum, Bed $newBedNum');
+    print('  Reason: $transferReason');
+    print('  Transfer Date: ${DateTime.now()}');
   }
-  void dischargePatient(String admissionId) {
+  Future<void> dischargePatient(String admissionId) async {
     // Implementation for discharging a patient
   }
-  void calculateBilling(String admissionId) {
+  Future<void> calculateBilling(String admissionId) async {
     // Implementation for calculating billing
   }
-  // Future<void> loadFromJson() async {
-  //   try {
-  //     _patient = await _repository.getAllPatients();
-  //     _room = await _repository.getAllRooms();
-  //     // _admission = await _repository.getAllAdmissions();
-  //     print('Data loaded successfully');
-  //   } catch (e) {
-  //     print('Error loading data: $e');
-  //   }
-  // }
-
-  // Future<void> saveToJson() async {
-  //   try {
-  //     await _repository.savePatients(_patient);
-  //     await _repository.saveRooms(_room);
-  //     // await _repository.saveAdmissions(_admission);
-  //     print('Data saved successfully');
-  //   } catch (e) {
-  //     print('Error saving data: $e');
-  //   }
-  // }
 }

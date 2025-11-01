@@ -16,7 +16,6 @@ Future<void> main() async {
   print('Data loaded successfully!');
   print('=========================================');
 
-  
   PatientConsole patientConsole = PatientConsole(hospital);
   AdmissionConsole admissionConsole = AdmissionConsole(hospital);
   RoomConsole roomConsole = RoomConsole(hospital);

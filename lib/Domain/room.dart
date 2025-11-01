@@ -37,7 +37,7 @@ abstract class Room {
   }
 
   bool isAvailableBed(Bed bed) {
-    return bed.status == BedStatus.available;
+    return bed.getStatus == BedStatus.available;
   }
   Map<String, dynamic> toMap() {
     return {
