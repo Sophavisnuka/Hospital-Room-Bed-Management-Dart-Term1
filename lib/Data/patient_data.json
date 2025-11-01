@@ -1,15 +1,5 @@
 [
   {
-    "id": "be53941d-563f-4e97-b332-4bd1ccc9644c",
-    "name": "Layheang",
-    "age": 18,
-    "gender": "f",
-    "phone": "0987654321",
-    "date of birth": "19-05-2007",
-    "reason": "Bek",
-    "nights": 3
-  },
-  {
     "id": "430642d7-4794-4b34-a13e-5b72a403cb2f",
     "name": "Nuka",
     "age": 19,
@@ -47,36 +37,6 @@
     "phone": "123456789",
     "date of birth": "15-02-2009",
     "reason": "sick",
-    "nights": 2
-  },
-  {
-    "id": "a86c671c-03f7-4dfd-839b-d5378f45f376",
-    "name": "Someth Smos hz songha tt",
-    "age": 12,
-    "gender": "male",
-    "phone": "123456789",
-    "date of birth": "12-07-2005",
-    "reason": "nirk ss",
-    "nights": 12
-  },
-  {
-    "id": "7daae3ef-9ed2-4e74-ab28-dfe0121f3f2c",
-    "name": "Visnuka gay and love boy",
-    "age": 25,
-    "gender": "other",
-    "phone": "123456789",
-    "date of birth": "22-07-2005",
-    "reason": "sick of love",
-    "nights": 2
-  },
-  {
-    "id": "1b48817e-1bb8-43e7-9388-22704134fbb6",
-    "name": "Samnang Jol Jit Pherk Sra Hz tv chlos echo pet tha jit os tlerm",
-    "age": 20,
-    "gender": "female",
-    "phone": "012937420",
-    "date of birth": "29-05-2005",
-    "reason": "pherk pek ors tlerm",
     "nights": 2
   }
 ]
