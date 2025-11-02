@@ -137,9 +137,42 @@ class PatientConsole {
   //search patient
   Future<void> findPatientByKeyword() async {
     stdout.write("========================================");
-    stdout.write("Enter keyword to search patient: ");
+    stdout.write("\nEnter keyword to search patient: ");
     String keyword = stdin.readLineSync()!;
     hospital.searchPatient(keyword);
+  }
+
+  Future<void> admitPatient() async {
+    // Implementation for admitting a patient
+    stdout.write('Enter patient name to admit: ');
+    String patientName = stdin.readLineSync()!;
+    stdout.write('Enter room number to admit to: ');
+    int roomNumber = int.parse(stdin.readLineSync()!);
+    stdout.write('Enter bed number to admit to: ');
+    String bedNumber = stdin.readLineSync()!;
+    DateTime admissionDate = DateTime.now();
+    await hospital.admitPatient(patientName, roomNumber, bedNumber, admissionDate);
+  }
+
+  Future<void> transferPatient() async {
+    // Implementation for transferring a patient
+    stdout.write('Enter patient name to transfer: ');
+    String patientName = stdin.readLineSync()!;
+    stdout.write('Enter current room number: ');
+    int currentRoomNum = int.parse(stdin.readLineSync()!);
+    stdout.write('Enter current bed number: ');
+    String currentBedNum = stdin.readLineSync()!;
+    stdout.write('Enter new room number: ');
+    int newRoomNum = int.parse(stdin.readLineSync()!);
+    stdout.write('Enter new bed number: ');
+    String newBedNum = stdin.readLineSync()!;
+    stdout.write('Enter reason for transfer: ');
+    String transferReason = stdin.readLineSync()!;
+    if (patientName.isEmpty || currentBedNum.isEmpty || newBedNum.isEmpty || transferReason.isEmpty || currentRoomNum <=0 || newRoomNum <=0) {
+      print('Finished updating bed statuses.');
+      pressEnterToContinue();
+    }
+    await hospital.transferPatient(patientName, currentRoomNum, currentBedNum, newBedNum, newRoomNum, transferReason);
   }
 
   Future<void> displayPatientUi() async {
@@ -183,9 +216,11 @@ class PatientConsole {
           pressEnterToContinue();
           break;
         case '6':
+          await admitPatient();
           pressEnterToContinue();
           break;
         case '7':
+          await transferPatient();
           pressEnterToContinue();
           break;
         case '0':

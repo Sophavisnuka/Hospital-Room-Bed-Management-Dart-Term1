@@ -29,7 +29,7 @@ class RoomConsole {
       return;
     }
     // Check if room number already exists
-    if (hospital.room.any((r) => r.roomNumber == roomNumber)) {
+    if (hospital.rooms.any((r) => r.roomNumber == roomNumber)) {
       print("Error: Room number $roomNumber already exists!");
       return;
     }
@@ -81,22 +81,83 @@ class RoomConsole {
     }
   }
 
+  Future<void> updateBedStatus() async {
+    // Implementation for updating a bed status
+    stdout.write('Enter room number to update: ');
+    int? roomNumber = int.tryParse(stdin.readLineSync()!);
+    if (roomNumber == null) {
+      print('Finished updating bed statuses.');
+      pressEnterToContinue();
+    }
+    try {
+      final room = hospital.rooms.firstWhere((r) => r.roomNumber == roomNumber);
+      print('\n--- Room $roomNumber Beds ---');
+      for (var bed in room.beds) {
+        String status = bed.getStatus.toString().split('.').last;
+        print('Bed Number: ${bed.bedNumber}, Status: $status');
+      }
+    } catch (e) {
+      print('Room $roomNumber not found.');
+      return;
+    }
+    while (true) {
+      stdout.write('Enter bed number to update: ');
+      String bedNumber = stdin.readLineSync()!;
+      // Exit condition: if user presses Enter without input
+      if (bedNumber.isEmpty) {
+        print('Finished updating bed statuses.');
+        break;
+      }
+      
+      // print('Current status of bed $bedNumber: $currentBedStatus');
+      print('Select new status:');
+      print('1. Available');
+      print('2. Occupied');
+      print('3. Cleaning');
+      print('4. Maintenance');
+      stdout.write('Enter new status (available/occupied/cleaning/maintenance): ');
+      int? status = int.tryParse(stdin.readLineSync()!);
+      switch (status) {
+        case 1:
+          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.available);
+          print('Bed status updated to Available.');
+          break;
+        case 2:
+          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.occupied);
+          print('Bed status updated to Occupied.');
+          break;
+        case 3:
+          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.cleaning);
+          print('Bed status updated to Cleaning.');
+          break;
+        case 4:
+          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.maintenance);
+          print('Bed status updated to Maintenance.');
+          break;
+        default:
+          print('Invalid status entered.');
+      }
+    }
+  }
+
   Future<void> viewAllRooms() async {
     // Implementation for viewing all rooms
-    if (hospital.room.isEmpty) {
+    if (hospital.rooms.isEmpty) {
       print("No rooms found.");
       return;
     }
-    for (var room in hospital.room) {
+    for (var room in hospital.rooms) {
+      print("\n===================================================");
       print("Room Number: ${room.roomNumber}");
       print("Room Type: ${room.roomType}");
       print("Base Price: ${room.basePrice}");
       print("Is Available: ${room.isAvailable}");
       print("Beds:");
       for (var bed in room.beds) {
-        print("  - Bed Number: ${bed.bedNumber}, Status: ${bed.status}");
+        String status = bed.getStatus.toString().split('.').last;
+        print("  - Bed Number: ${bed.bedNumber}, Status: $status");
       }
-      print("------------------------------");
+      print("------------------------------------------------------");
     }
   }
 
@@ -108,9 +169,10 @@ class RoomConsole {
       print("\n=========================================");
       print("1. View All Rooms");
       print("2. Add New Rooms");
-      print("3. Edit Room");
-      print('4. Delete Room');
-      print("5. Change Room Status");
+      print("3. Edit Bed Status");
+      print("4. Edit Room Price");
+      print("5. Remove Room");
+      print("6. Remove Bed from Room");
       print("=========================================");
       print("0. Back to Main Menu");
       print("=========================================");
@@ -127,6 +189,7 @@ class RoomConsole {
           pressEnterToContinue();
           break;
         case '3':
+          await updateBedStatus();
           pressEnterToContinue();
           break;
         case '4':

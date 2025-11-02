@@ -1,0 +1,26 @@
+[
+  {
+    "id": "9391d6eb-62e2-4df6-aa2b-307c9aa6a387",
+    "patient": "Theany",
+    "roomNumber": 101,
+    "bedNumber": "101-1",
+    "admissionDate": "2025-11-01T11:55:25.996339",
+    "dischargeDate": "2025-11-01T12:04:56.571526",
+    "dischargeReason": "Transferred to Room 101",
+    "transferReason": null,
+    "previousRoomNumber": null,
+    "previousBedNumber": null
+  },
+  {
+    "id": "142fb6e0-ba4a-40ab-a490-f9457299eb9b",
+    "patient": "Theany",
+    "roomNumber": 101,
+    "bedNumber": "101-2",
+    "admissionDate": "2025-11-01T12:04:56.570528",
+    "dischargeDate": null,
+    "dischargeReason": null,
+    "transferReason": "Cleaning bed 101-1",
+    "previousRoomNumber": 101,
+    "previousBedNumber": "101-1"
+  }
+]
