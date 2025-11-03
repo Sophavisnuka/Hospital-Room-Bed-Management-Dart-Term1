@@ -1,12 +1,15 @@
 import 'dart:io';
-import 'package:my_first_project/Domain/hospital.dart';
+import 'package:my_first_project/Domain/admission_service.dart';
 import 'package:my_first_project/Domain/patient.dart';
+import 'package:my_first_project/Domain/patient_service.dart';
 import 'package:my_first_project/Util/validation.dart';
 import 'package:my_first_project/Util/console_utils.dart';
 
 class PatientConsole {
-  final Hospital hospital;
-  PatientConsole(this.hospital);
+  // final Hospital hospital;
+  final PatientService patientService;
+  final AdmissionService admissionService;
+  PatientConsole(this.patientService, this.admissionService);
   //register patient
   Future<void> registerPatient() async {
     print('=========================================');
@@ -36,7 +39,7 @@ class PatientConsole {
       reason: reason,
       nights: nights,
     );
-    await hospital.registerPatient(patient);
+    await patientService.registerPatient(patient);
     print("\nPatient registered successfully!\n");
     print(patient.toString());
   }
@@ -49,11 +52,11 @@ class PatientConsole {
         "${_padRight('Name', 25)} ${_padRight('Age', 5)} ${_padRight('Gender', 10)} ${_padRight('Reason', 20)}");
     print(
         "===============================================================================");
-    if (hospital.patients.isEmpty) {
+    if (patientService.patients.isEmpty) {
       print("No patients found.");
       return;
     }
-    for (var p in hospital.patients) {
+    for (var p in patientService.patients) {
       String name = _truncate(p.name, 25);
       String age = _padRight(p.age.toString(), 5);
       String gender = _padRight(p.gender, 10);
@@ -85,7 +88,7 @@ class PatientConsole {
     stdout.write("Enter patient name to edit: ");
     String name = stdin.readLineSync()!;
 
-    final patient = hospital.patients
+    final patient = patientService.patients
         .firstWhere((p) => p.name.toLowerCase() == name.toLowerCase());
     print("\nLeave any field blank to keep current value.");
 
@@ -124,14 +127,14 @@ class PatientConsole {
           newNightsInput.isEmpty ? patient.nights : int.parse(newNightsInput),
     );
 
-    await hospital.editPatient(updatedPatient);
+    await patientService.editPatient(updatedPatient);
   }
 
   //delete patient
   Future<void> deletePatient() async {
     stdout.write("Enter patient name to delete: ");
     String name = stdin.readLineSync()!;
-    await hospital.deletePatient(name);
+    await patientService.deletePatient(name);
   }
 
   //search patient
@@ -139,7 +142,7 @@ class PatientConsole {
     stdout.write("========================================");
     stdout.write("\nEnter keyword to search patient: ");
     String keyword = stdin.readLineSync()!;
-    hospital.searchPatient(keyword);
+    patientService.searchPatient(keyword);
   }
 
   Future<void> admitPatient() async {
@@ -151,7 +154,7 @@ class PatientConsole {
     stdout.write('Enter bed number to admit to: ');
     String bedNumber = stdin.readLineSync()!;
     DateTime admissionDate = DateTime.now();
-    await hospital.admitPatient(patientName, roomNumber, bedNumber, admissionDate);
+    await admissionService.admitPatient(patientName, roomNumber, bedNumber, admissionDate);
   }
 
   Future<void> transferPatient() async {
@@ -172,7 +175,7 @@ class PatientConsole {
       print('Finished updating bed statuses.');
       pressEnterToContinue();
     }
-    await hospital.transferPatient(patientName, currentRoomNum, currentBedNum, newBedNum, newRoomNum, transferReason);
+    await admissionService.transferPatient(patientName: patientName, currentRoomNum: currentRoomNum, currentBedNum: currentBedNum, newRoomNum: newRoomNum, newBedNum: newBedNum, transferReason: transferReason);
   }
 
   Future<void> dischargePatient() async {
@@ -182,15 +185,14 @@ class PatientConsole {
     int roomNumber = int.parse(stdin.readLineSync()!);
     stdout.write('Enter bed number: ');
     String bedNumber = stdin.readLineSync()!;
-    DateTime dischargeDate = DateTime.now();
-    await hospital.dischargePatient(patientName, roomNumber, bedNumber, dischargeDate);
+    await admissionService.dischargePatient(patientName: patientName, roomNumber: roomNumber, bedNumber: bedNumber, dischargeReason: 'Patient discharged');
   }
 
   Future<void> displayPatientUi() async {
     // Implementation for displaying the UI
     while (true) {
       print("\n========================================");
-      print("Hospital Management System - Patients");
+      print("patientService Management System - Patients");
       print("========================================");
       print("1. View All Patients");
       print("2. Register New Patient");

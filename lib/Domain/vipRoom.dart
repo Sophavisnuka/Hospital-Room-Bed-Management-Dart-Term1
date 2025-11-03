@@ -8,14 +8,58 @@ class VIPRoom extends Room {
   VIPRoom({
     required int roomNumber,
     required List<Bed> beds,
+    double basePrice = 250.0,
     this.hasLounge = true,
     this.hasPrivateBathroom = true,
   }) : super(
     roomNumber: roomNumber,
     roomType: RoomType.vip,
-    basePrice: 250.0, // Higher base price for VIP
+    basePrice: basePrice,
     beds: beds,
   );
+
+  // Polymorphic implementation for VIP room
+  @override
+  double calculateTotalCost(int nights) {
+    double baseCost = basePrice * nights;
+    double serviceCharge = getServiceCharge() * nights;
+    return baseCost + serviceCharge;
+  }
+
+  @override
+  List<String> getRoomFeatures() {
+    List<String> features = [
+      'Luxury amenities',
+      'Premium bedding',
+      'Large flat-screen TV',
+      'Mini-fridge',
+      'Room service',
+      'High-speed Wi-Fi',
+      'Air conditioning with individual control',
+    ];
+    
+    if (hasLounge) {
+      features.add('Private lounge area');
+    }
+    if (hasPrivateBathroom) {
+      features.add('Private bathroom with luxury fixtures');
+    }
+    
+    return features;
+  }
+
+  @override
+  double getServiceCharge() {
+    double charge = 50.0; // Base VIP service charge
+    if (hasLounge) charge += 25.0;
+    if (hasPrivateBathroom) charge += 30.0;
+    return charge;
+  }
+
+  @override
+  bool canAccommodateSpecialNeeds() {
+    return true; // VIP rooms have accessibility features
+  }
 
   @override
   Map<String, dynamic> toMap() {
@@ -26,15 +70,17 @@ class VIPRoom extends Room {
   }
 
   factory VIPRoom.fromMap(Map<String, dynamic> map) {
-    return VIPRoom(
+    final room = VIPRoom(
       roomNumber: map['roomNumber'],
+      basePrice: (map['basePrice'] as num?)?.toDouble() ?? 250.0,
       beds: (map['beds'] as List)
           .map((bedMap) => Bed.fromMap(bedMap))
           .toList(),
-      hasLounge: map['hasLounge'],
-      hasPrivateBathroom: map['hasPrivateBathroom'],
-    )
-      ..id = map['id']
-      ..isAvailable = map['isAvailable'];
+      hasLounge: map['hasLounge'] ?? true,
+      hasPrivateBathroom: map['hasPrivateBathroom'] ?? true,
+    );
+    // Set the availability from the map
+    room.isAvailable = map['isAvailable'] ?? true;
+    return room;
   }
 }

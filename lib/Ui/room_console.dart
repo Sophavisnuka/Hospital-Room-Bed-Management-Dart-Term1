@@ -1,13 +1,15 @@
 import 'dart:io';
-import 'package:my_first_project/Domain/hospital.dart';
+// import 'package:my_first_project/Domain/hospital.dart';
 import 'package:my_first_project/Domain/bed.dart';
+import 'package:my_first_project/Domain/room_service.dart';
 import 'package:my_first_project/Domain/standardRoom.dart';
 import 'package:my_first_project/Domain/vipRoom.dart';
 import 'package:my_first_project/Util/console_utils.dart';
 
 class RoomConsole {
-  final Hospital hospital;
-  RoomConsole(this.hospital);
+  // final Hospital hospital;
+  final RoomService roomService;
+  RoomConsole(this.roomService);
 
   Future<void> createRoom() async {
     // Create a standard room with 4 beds
@@ -29,7 +31,7 @@ class RoomConsole {
       return;
     }
     // Check if room number already exists
-    if (hospital.rooms.any((r) => r.roomNumber == roomNumber)) {
+    if (roomService.rooms.any((r) => r.roomNumber == roomNumber)) {
       print("Error: Room number $roomNumber already exists!");
       return;
     }
@@ -52,7 +54,7 @@ class RoomConsole {
 
         final standardRoom = StandardRoom(roomNumber: roomNumber, beds: beds);
 
-        await hospital.addRoom(standardRoom);
+        await roomService.addRoom(standardRoom);
         print("Standard Room $roomNumber added successfully!");
       }
     } else if (typeChoice == 2) {
@@ -73,7 +75,7 @@ class RoomConsole {
         hasLounge: hasLounge,
         hasPrivateBathroom: hasPrivateBathroom,
       );
-      await hospital.addRoom(vipRoom);
+      await roomService.addRoom(vipRoom);
       print("VIP Room $roomNumber added successfully!");
     } else {
       print("Invalid room type choice.");
@@ -90,7 +92,7 @@ class RoomConsole {
       pressEnterToContinue();
     }
     try {
-      final room = hospital.rooms.firstWhere((r) => r.roomNumber == roomNumber);
+      final room = roomService.rooms.firstWhere((r) => r.roomNumber == roomNumber);
       print('\n--- Room $roomNumber Beds ---');
       for (var bed in room.beds) {
         String status = bed.getStatus.toString().split('.').last;
@@ -119,19 +121,19 @@ class RoomConsole {
       int? status = int.tryParse(stdin.readLineSync()!);
       switch (status) {
         case 1:
-          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.available);
+          await roomService.editRoomStatus(roomNumber!, bedNumber, BedStatus.available);
           print('Bed status updated to Available.');
           break;
         case 2:
-          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.occupied);
+          await roomService.editRoomStatus(roomNumber!, bedNumber, BedStatus.occupied);
           print('Bed status updated to Occupied.');
           break;
         case 3:
-          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.cleaning);
+          await roomService.editRoomStatus(roomNumber!, bedNumber, BedStatus.cleaning);
           print('Bed status updated to Cleaning.');
           break;
         case 4:
-          await hospital.editRoomStatus(roomNumber!, bedNumber, BedStatus.maintenance);
+          await roomService.editRoomStatus(roomNumber!, bedNumber, BedStatus.maintenance);
           print('Bed status updated to Maintenance.');
           break;
         default:
@@ -142,11 +144,11 @@ class RoomConsole {
 
   Future<void> viewAllRooms() async {
     // Implementation for viewing all rooms
-    if (hospital.rooms.isEmpty) {
+    if (roomService.rooms.isEmpty) {
       print("No rooms found.");
       return;
     }
-    for (var room in hospital.rooms) {
+    for (var room in roomService.rooms) {
       print("\n===================================================");
       print("Room Number: ${room.roomNumber}");
       print("Room Type: ${room.roomType}");
@@ -177,7 +179,7 @@ class RoomConsole {
       return;
     }
     try {
-      double oldPrice = await hospital.editRoomPrice(roomNumber, newPrice);
+      double oldPrice = await roomService.editRoomPrice(roomNumber, newPrice);
       print('\nRoom $roomNumber price updated successfully');
       print('Old Price: $oldPrice');
       print('New Price: $newPrice');
@@ -193,7 +195,7 @@ class RoomConsole {
       print("Invalid room number.");
       return;
     }
-    await hospital.deleteRoom(roomNumber);
+    await roomService.deleteRoom(roomNumber);
   }
   Future<void> removeBedFromRoom() async {
     // Implementation for removing a bed from a room
@@ -205,13 +207,13 @@ class RoomConsole {
     }
     stdout.write("Enter bed number to remove: ");
     String bedNumber = stdin.readLineSync()!;
-    await hospital.deleteBedFromRoom(roomNumber, bedNumber);
+    await roomService.deleteBedFromRoom(roomNumber, bedNumber);
   }
   Future<void> displayRoomUi() async {
     while (true) {
       // Implementation for displaying the UI
       print("\n=========================================");
-      print("\nHospital Management System - Rooms");
+      print("\nroomService Management System - Rooms");
       print("\n=========================================");
       print("1. View All Rooms");
       print("2. Add New Rooms");

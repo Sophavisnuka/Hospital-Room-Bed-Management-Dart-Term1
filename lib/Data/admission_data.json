@@ -5,6 +5,7 @@
     "roomNumber": 101,
     "bedNumber": "101-2",
     "admissionDate": "2025-11-01T12:04:56.570528",
+    "dischargeDate": null,
     "dischargeReason": "Discharged",
     "transferReason": "Cleaning bed 101-1",
     "previousRoomNumber": 101,
@@ -17,10 +18,24 @@
     "roomNumber": 102,
     "bedNumber": "102-1",
     "admissionDate": "2025-11-02T20:39:01.991810",
+    "dischargeDate": null,
     "dischargeReason": "Discharged",
     "transferReason": null,
     "previousRoomNumber": null,
     "previousBedNumber": null,
     "totalPrice": 10000.0
+  },
+  {
+    "id": "109206d6-dac0-44ff-bf39-7ae3ea52388f",
+    "patient": "Lance",
+    "roomNumber": 201,
+    "bedNumber": "201-1",
+    "admissionDate": "2025-11-03T20:21:50.900972",
+    "dischargeDate": "2025-11-03T20:25:39.868242",
+    "dischargeReason": "Transferred to Room 102",
+    "transferReason": null,
+    "previousRoomNumber": null,
+    "previousBedNumber": null,
+    "totalPrice": 1215.0
   }
 ]
