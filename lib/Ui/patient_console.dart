@@ -175,6 +175,17 @@ class PatientConsole {
     await hospital.transferPatient(patientName, currentRoomNum, currentBedNum, newBedNum, newRoomNum, transferReason);
   }
 
+  Future<void> dischargePatient() async {
+    stdout.write('Enter patient name to discharge: ');
+    String patientName = stdin.readLineSync()!;
+    stdout.write('Enter room number: ');
+    int roomNumber = int.parse(stdin.readLineSync()!);
+    stdout.write('Enter bed number: ');
+    String bedNumber = stdin.readLineSync()!;
+    DateTime dischargeDate = DateTime.now();
+    await hospital.dischargePatient(patientName, roomNumber, bedNumber, dischargeDate);
+  }
+
   Future<void> displayPatientUi() async {
     // Implementation for displaying the UI
     while (true) {
@@ -188,6 +199,7 @@ class PatientConsole {
       print("5. Search Patient");
       print("6. Admit Patient");
       print("7. Transfer Patient");
+      print("8. Discharge Patient");
       print("========================================");
       print("0. Back to Main Menu");
       print("========================================");
@@ -221,6 +233,10 @@ class PatientConsole {
           break;
         case '7':
           await transferPatient();
+          pressEnterToContinue();
+          break;
+        case '8':
+          await dischargePatient();
           pressEnterToContinue();
           break;
         case '0':

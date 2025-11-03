@@ -17,22 +17,31 @@ class AdmissionConsole {
     }
     pressEnterToContinue();
   }
-  Future<void> dischargePatient() async {
-    // print('=========================================');
-    // stdout.write('Enter patient name to discharge: ');
-    // String patientName = stdin.readLineSync()!;
-
-    // final admission = hospital.admissions.firstWhere(
-    //   (a) => a.patient == patientName && a.dischargeDate == null,
-    //   orElse: () => throw Exception('No active admission found for patient $patientName.'),
-    // );
-
-    // stdout.write('Enter discharge reason: ');
-    // String dischargeReason = stdin.readLineSync()!;
-
-    // await hospital.dischargePatient(patientName, dischargeReason);
-    // print('\nPatient $patientName discharged successfully!');
-    // pressEnterToContinue();
+  Future<void> deleteAdmission() async {
+    stdout.write('Enter patient name to delete admission: ');
+    String? input = stdin.readLineSync();
+    if (input == null || input.isEmpty) {
+      print('Invalid input. Patient name cannot be empty.');
+      pressEnterToContinue();
+      return;
+    }
+    await hospital.deleteAdmissionByPatientName(input);
+  }
+  Future<void> searchAdmissionsByPatientName() async {
+    stdout.write('Enter patient name to search admissions: ');
+    String? input = stdin.readLineSync();
+    if (input == null || input.isEmpty) {
+      print('Invalid input. Patient name cannot be empty.');
+      pressEnterToContinue();
+      return;
+    }
+    await hospital.searchAdmission(input);
+  }
+  Future<void> viewDischargeSummary() async {
+    for (var discharge in hospital.discharges) {
+      print('\nDischarge ID: ${discharge.id}, \nPatient: ${discharge.patient}, \nDischarge Date: ${discharge.dischargeDate}');
+    }
+    pressEnterToContinue();
   }
   Future<void> displayAdmissionUi() async {
     while (true) {
@@ -41,10 +50,9 @@ class AdmissionConsole {
       print("Hospital Management System - Admissions");
       print('=========================================');
       print("1. View All Admissions");
-      print('2. Edit Admission');
-      print('3. Delete Admission');
-      print("4. Discharge Patient");
-      print("5. View Billing Summary");
+      print('2. Delete Admission');
+      print("3. Search Admissions by Patient Name");
+      print("4. View All Discharge Summaries");
       print('=========================================');
       print("0. Back to Main Menu");
       print('=========================================');
@@ -57,15 +65,15 @@ class AdmissionConsole {
           pressEnterToContinue();
           break;
         case '2':
+          await deleteAdmission();
           pressEnterToContinue();
           break;
         case '3':
+          await searchAdmissionsByPatientName();
           pressEnterToContinue();
           break;
         case '4':
-          pressEnterToContinue();
-          break;
-        case '5':
+          await viewDischargeSummary();
           pressEnterToContinue();
           break;
         case '0':

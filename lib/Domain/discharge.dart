@@ -2,66 +2,68 @@ import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-class Admission {
+class Discharge {
   final String id;
+  final String admissionId;  // Reference to original admission
   final String patient;
   final int roomNumber;
   final String bedNumber;
   final DateTime admissionDate;
+  final DateTime dischargeDate;
+  final String? dischargeReason;
   final double totalPrice;
-  String? dischargeReason;
-  String? transferReason;
-  int? previousRoomNumber;
-  String? previousBedNumber;
+  final int nightsStayed;
 
-  Admission({
+  Discharge({
     String? id,
+    required this.admissionId,
     required this.patient,
     required this.roomNumber,
     required this.bedNumber,
     required this.admissionDate,
-    required this.totalPrice,
+    required this.dischargeDate,
     this.dischargeReason,
-    this.transferReason,
-    this.previousRoomNumber,
-    this.previousBedNumber,
+    required this.totalPrice,
+    required this.nightsStayed,
   }) : id = id ?? uuid.v4();
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'admissionId': admissionId,
       'patient': patient,
       'roomNumber': roomNumber,
       'bedNumber': bedNumber,
       'admissionDate': admissionDate.toIso8601String(),
+      'dischargeDate': dischargeDate.toIso8601String(),
       'dischargeReason': dischargeReason,
-      'transferReason': transferReason,
-      'previousRoomNumber': previousRoomNumber,
-      'previousBedNumber': previousBedNumber,
       'totalPrice': totalPrice,
+      'nightsStayed': nightsStayed,
     };
   }
 
-  factory Admission.fromMap(Map<String, dynamic> map) {
+  factory Discharge.fromMap(Map<String, dynamic> map) {
     try {
-      return Admission(
+      return Discharge(
         id: map['id'] as String?,
+        admissionId: map['admissionId'] as String? ?? '',
         patient: map['patient'] as String? ?? '',
         roomNumber: map['roomNumber'] as int? ?? 0,
         bedNumber: map['bedNumber'] as String? ?? '',
         admissionDate: map['admissionDate'] != null
             ? DateTime.parse(map['admissionDate'] as String)
-            : DateTime.now(),  // Fixed: check if null BEFORE parsing
+            : DateTime.now(),
+        dischargeDate: map['dischargeDate'] != null
+            ? DateTime.parse(map['dischargeDate'] as String)
+            : DateTime.now(),
         dischargeReason: map['dischargeReason'] as String?,
-        transferReason: map['transferReason'] as String?,
-        previousRoomNumber: map['previousRoomNumber'] as int?,
-        previousBedNumber: map['previousBedNumber'] as String?,
         totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
+        nightsStayed: map['nightsStayed'] as int? ?? 0,
       );
     } catch (e) {
-      print('Error loading admission from map: $e');
+      print('Error loading discharge from map: $e');
       print('Map data: $map');
-      rethrow;  // Re-throw to see the error
+      rethrow;
     }
   }
 }

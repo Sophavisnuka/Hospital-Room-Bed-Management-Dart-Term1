@@ -1,0 +1,14 @@
+[
+  {
+    "id": "3b33fa63-27bf-4ead-9079-17cddc3206d8",
+    "admissionId": "0bdfcc92-27b3-4388-8358-d0452a34b92d",
+    "patient": "Nuka",
+    "roomNumber": 102,
+    "bedNumber": "102-1",
+    "admissionDate": "2025-11-02T20:53:16.006510",
+    "dischargeDate": "2025-11-02T21:45:24.215278",
+    "dischargeReason": null,
+    "totalPrice": 200.0,
+    "nightsStayed": 2
+  }
+]

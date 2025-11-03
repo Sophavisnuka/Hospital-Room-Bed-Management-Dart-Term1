@@ -1,41 +1,33 @@
 import 'package:my_first_project/Domain/admission.dart';
 import 'package:my_first_project/Domain/room.dart';
-import 'package:my_first_project/Domain/staff.dart';
 import 'package:my_first_project/Domain/patient.dart';
 import 'package:my_first_project/Domain/bed.dart';
-import 'package:uuid/uuid.dart';
+import 'package:my_first_project/Domain/discharge.dart';
 import '../Data/hospital_repository.dart';
+// import 'package:uuid/uuid.dart';
 
-const uuid = Uuid();
+// const uuid = Uuid();
 
 class Hospital {
-  String _id;
-  String _name;
-  String _address;
-  int _nextAdmissionId;
   List<Bed> _bed;
   List<Room> _room;
   List<Patient> _patient = [];
   List<Admission> _admission;
-  List<Staff> _staff;
+  List<Discharge> _discharge = [];
 
   final HospitalRepository _repository = HospitalRepository();
 
   Hospital({required String name, required String address})
-      : _name = name,
-        _address = address,
-        _nextAdmissionId = 1,
-        _bed = [],
+      : _bed = [],
         _room = [],
         _patient = [],
-        _admission = [],
-        _staff = [],
-        _id = uuid.v4();
+        _admission = [];
 
   List<Bed> get beds => _bed;
   List<Patient> get patients => _patient;
   List<Room> get rooms => _room;
   List<Admission> get admissions => _admission;
+  List<Discharge> get discharges => _discharge;
 
   // Load all data from JSON files
   Future<void> loadAllData() async {
@@ -45,10 +37,12 @@ class Hospital {
         'room_data.json', (map) => Room.fromMap(map));
     _admission = await _repository.loadData(
         'admission_data.json', (map) => Admission.fromMap(map));
-    // _admission = await _repository.getAllAdmissions();
+    _discharge = await _repository.loadData(
+        'discharge_data.json', (map) => Discharge.fromMap(map));
     print('Loaded ${_patient.length} patients');
     print('Loaded ${_room.length} rooms');
     print('Loaded ${_admission.length} admissions');
+    print('Loaded ${_discharge.length} discharges');
   }
 
   // method for room
@@ -80,6 +74,44 @@ class Hospital {
     await _repository.saveData('room_data.json', _room, (r) => r.toMap());
     print('Bed $bedNumber status updated to ${status.toString().split('.').last}');
     return currentBedStatus;
+  }
+  Future<double> editRoomPrice(int roomNumber, double newPrice) async {
+    // Implementation for editing room price
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber,
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    double oldPrice = room.price;
+
+    room.price = newPrice;
+    // final room = Room
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+
+    return oldPrice;
+  }
+  Future<void> deleteRoom(int roomNumber) async {
+    // Implementation for deleting a room
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber,
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    rooms.remove(room);
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    print('Room $roomNumber has been deleted.');
+  }
+  Future<void> deleteBedFromRoom(int roomNumber, String bedNumber) async {
+    // Implementation for deleting a bed
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber,
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    final bed = room.beds.firstWhere(
+      (b) => b.bedNumber == bedNumber,
+      orElse: () => throw Exception('Bed $bedNumber not found.'),
+    );
+    room.beds.remove(bed);
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    print('Bed $bedNumber in Room $roomNumber has been deleted.');
   }
   // method for patient
   Future<void> registerPatient(Patient patient) async {
@@ -135,7 +167,7 @@ class Hospital {
       orElse: () => throw Exception('Patient $patientName not found.'),
     );
     final checkPatientAdmission = _admission.where(
-      (a) => a.patient == patient.name && a.dischargeDate == null,
+      (a) => a.patient == patient.name && a.dischargeReason == null,
     ).toList();
     if (checkPatientAdmission.isNotEmpty) {
       print('\nError: Patient ${patient.name} is already admitted!');
@@ -166,11 +198,13 @@ class Hospital {
       print('Error: Room $roomNumber has no available beds.');
       return;
     }
+    double totalRoomPrice = room.price * patient.nights!.toDouble();
     final admission = Admission(
       patient: patient.name,
       roomNumber: roomNumber, 
       bedNumber: bedNumber,
       admissionDate: admissionDate,
+      totalPrice: totalRoomPrice,
     );
     bed.setStatus = BedStatus.occupied;
     // Add admission and save data
@@ -234,7 +268,6 @@ class Hospital {
     if (newRoom.beds.every((b) => b.getStatus != BedStatus.available)) {
       newRoom.isAvailable = false;
     }
-
     final newAdmission = Admission(
       patient: patient.name,
       roomNumber: newRoomNum,
@@ -243,9 +276,10 @@ class Hospital {
       transferReason: transferReason,
       previousRoomNumber: currentRoomNum,
       previousBedNumber: currentBedNum,
+      totalPrice: currentAdmission.totalPrice,
+
     );
     // Close the old admission record
-    currentAdmission.dischargeDate = DateTime.now();
     currentAdmission.dischargeReason = 'Transferred to Room $newRoomNum';
 
     _admission.add(newAdmission);
@@ -257,10 +291,87 @@ class Hospital {
     print('  Reason: $transferReason');
     print('  Transfer Date: ${DateTime.now()}');
   }
-  Future<void> dischargePatient(String admissionId) async {
+  Future<void> dischargePatient(String patientName, int roomNumber, String bedNumber, DateTime dischargeDate) async {
     // Implementation for discharging a patient
+    final patient = patients.firstWhere(
+      (p) => p.name == patientName,
+      orElse: () => throw Exception('Patient $patientName not found.'),
+    );
+    final room = rooms.firstWhere(
+      (r) => r.roomNumber == roomNumber, 
+      orElse: () => throw Exception('Room $roomNumber not found.'),
+    );
+    final bed = room.beds.firstWhere(
+      (b) => b.bedNumber == bedNumber, 
+      orElse: () => throw Exception('Bed $bedNumber not found.'),
+    );
+    // Find the current admission record
+    final currentAdmission = _admission.firstWhere(
+      (a) => a.patient == patient.name && a.roomNumber == roomNumber && a.bedNumber == bedNumber,
+      orElse: () => throw Exception('Current admission not found.')
+    );
+    bed.setStatus = BedStatus.available;
+    // Update room availability
+    final availableBeds = room.beds.where((b) => b.getStatus == BedStatus.available).length;
+    if (availableBeds > 0) {
+      room.isAvailable = true;
+    } else {
+      room.isAvailable = false;
+    }
+    // Create discharge record
+    final discharge = Discharge(
+      admissionId: currentAdmission.id,
+      patient: patient.name,
+      roomNumber: currentAdmission.roomNumber,
+      bedNumber: currentAdmission.bedNumber,
+      admissionDate: currentAdmission.admissionDate,
+      dischargeDate: dischargeDate,
+      dischargeReason: currentAdmission.dischargeReason,
+      totalPrice: currentAdmission.totalPrice,
+      nightsStayed: patient.nights!,
+    );
+
+    _discharge.add(discharge);
+    // Remove admission from active list
+    // _admission.removeWhere((a) => a.id == currentAdmission.id);
+    // Close the admission record
+    currentAdmission.dischargeReason = 'Discharged';
+    await _repository.saveData('admission_data.json', _admission, (a) => a.toMap());
+    await _repository.saveData('room_data.json', _room, (r) => r.toMap());
+    await _repository.saveData('discharge_data.json', _discharge, (d) => d.toMap());
+
+    print('\n✓ Patient ${patient.name} discharged successfully!');
+    print('  Room: ${currentAdmission.roomNumber}');
+    print('  Bed: ${currentAdmission.bedNumber}');
+    print('  Admission Date: ${currentAdmission.admissionDate.toLocal()}');
+    print('  Discharge Date: ${dischargeDate.toLocal()}');
+    print('  Nights Stayed: ${discharge.nightsStayed}');
+    print('  Total Price: \$${discharge.totalPrice.toStringAsFixed(2)}');
+    print('  Reason: ${discharge.dischargeReason}');
   }
-  Future<void> calculateBilling(String admissionId) async {
-    // Implementation for calculating billing
+  Future<void> deleteAdmissionByPatientName(String patientName) async {
+    // Implementation for deleting an admission
+    final admission = admissions.firstWhere(
+      (a) => a.patient == patientName,
+      orElse: () => throw Exception('Admission for patient $patientName not found.'),
+    );
+    admissions.remove(admission);
+    await _repository.saveData('admission_data.json', _admission, (a) => a.toMap());
+    print('Admission for patient $patientName has been deleted.');
+  }
+  Future<void> searchAdmission(String patientName) async {
+    // Implementation for searching an admission
+    final matches = admissions
+        .where((a) => a.patient.toLowerCase().contains(patientName.toLowerCase()))
+        .toList();
+
+    if (matches.isEmpty) {
+      print('No admissions found matching "$patientName".');
+    } else {
+      print('Found ${matches.length} admission(s):');
+      for (var a in matches) {
+        print('ID: ${a.id}, \nPatient: ${a.patient}, \nRoom: ${a.roomNumber}, \nBed: ${a.bedNumber}, \nAdmission Date: ${a.admissionDate}');
+      }
+    }
   }
 }
