@@ -15,7 +15,7 @@ abstract class Room {
   final int roomNumber;
   final List<Bed> beds;
   final RoomType roomType;
-  final double basePrice;
+  double basePrice;
   bool isAvailable;
 
   Room({
@@ -29,6 +29,11 @@ abstract class Room {
 
   // Getters
   int get roomNum => roomNumber;
+
+  set price(double newPrice) {
+    basePrice = newPrice;
+  }
+  double get price => basePrice;
 
   set roomNum(int roomNumber) {
     if (roomNumber <= 0) {
@@ -45,7 +50,7 @@ abstract class Room {
       'roomNumber': roomNumber,
       'roomType': roomType.toString().split('.').last,
       'basePrice': basePrice,
-      'bed quality': beds.length,
+      'bed quantity': beds.length,
       'beds': beds.map((bed) => bed.toMap()).toList(),
       'isAvailable': isAvailable,
     };

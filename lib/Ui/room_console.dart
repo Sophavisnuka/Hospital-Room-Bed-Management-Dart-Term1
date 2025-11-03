@@ -160,7 +160,53 @@ class RoomConsole {
       print("------------------------------------------------------");
     }
   }
-
+  Future<void> updateRoomPrice() async {
+    stdout.write('Enter room number to edit price: ');
+    int? roomNumber = int.tryParse(stdin.readLineSync()!);
+    // print('Current room price: ${}')
+    stdout.write('Enter new price for room $roomNumber: ');
+    double? newPrice = double.tryParse(stdin.readLineSync()!);
+    if (roomNumber == null || newPrice == null) {
+      print('Invalid room number or price.');
+      pressEnterToContinue();
+      return;
+    }
+    if (newPrice < 0) {
+      print('Price cannot be negative.');
+      pressEnterToContinue();
+      return;
+    }
+    try {
+      double oldPrice = await hospital.editRoomPrice(roomNumber, newPrice);
+      print('\nRoom $roomNumber price updated successfully');
+      print('Old Price: $oldPrice');
+      print('New Price: $newPrice');
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<void> removeRoom() async {
+    // Implementation for removing a room
+    stdout.write("Enter room number to remove: ");
+    int? roomNumber = int.tryParse(stdin.readLineSync()!);
+    if (roomNumber == null) {
+      print("Invalid room number.");
+      return;
+    }
+    await hospital.deleteRoom(roomNumber);
+  }
+  Future<void> removeBedFromRoom() async {
+    // Implementation for removing a bed from a room
+    stdout.write("Enter room number to remove bed from: ");
+    int? roomNumber = int.tryParse(stdin.readLineSync()!);
+    if (roomNumber == null) {
+      print("Invalid room number.");
+      return;
+    }
+    stdout.write("Enter bed number to remove: ");
+    String bedNumber = stdin.readLineSync()!;
+    await hospital.deleteBedFromRoom(roomNumber, bedNumber);
+  }
   Future<void> displayRoomUi() async {
     while (true) {
       // Implementation for displaying the UI
@@ -193,9 +239,15 @@ class RoomConsole {
           pressEnterToContinue();
           break;
         case '4':
+          await updateRoomPrice();
           pressEnterToContinue();
           break;
         case '5':
+          await removeRoom();  
+          pressEnterToContinue();
+          break;
+        case '6':
+          await removeBedFromRoom();
           pressEnterToContinue();
           break;
         case '0':
