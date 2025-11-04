@@ -9,6 +9,7 @@ class Admission {
   final String bedNumber;
   final DateTime admissionDate;
   final double totalPrice;
+  DateTime? dischargeDate;
   String? dischargeReason;
   String? transferReason;
   int? previousRoomNumber;
@@ -21,6 +22,7 @@ class Admission {
     required this.bedNumber,
     required this.admissionDate,
     required this.totalPrice,
+    this.dischargeDate,
     this.dischargeReason,
     this.transferReason,
     this.previousRoomNumber,
@@ -34,6 +36,7 @@ class Admission {
       'roomNumber': roomNumber,
       'bedNumber': bedNumber,
       'admissionDate': admissionDate.toIso8601String(),
+      'dischargeDate': dischargeDate?.toIso8601String(),
       'dischargeReason': dischargeReason,
       'transferReason': transferReason,
       'previousRoomNumber': previousRoomNumber,
@@ -51,7 +54,10 @@ class Admission {
         bedNumber: map['bedNumber'] as String? ?? '',
         admissionDate: map['admissionDate'] != null
             ? DateTime.parse(map['admissionDate'] as String)
-            : DateTime.now(),  // Fixed: check if null BEFORE parsing
+            : DateTime.now(),
+        dischargeDate: map['dischargeDate'] != null
+            ? DateTime.parse(map['dischargeDate'] as String)
+            : null,
         dischargeReason: map['dischargeReason'] as String?,
         transferReason: map['transferReason'] as String?,
         previousRoomNumber: map['previousRoomNumber'] as int?,
@@ -61,7 +67,7 @@ class Admission {
     } catch (e) {
       print('Error loading admission from map: $e');
       print('Map data: $map');
-      rethrow;  // Re-throw to see the error
+      rethrow;
     }
   }
 }

@@ -1,18 +1,22 @@
 import 'dart:io';
-import 'package:my_first_project/Domain/hospital.dart';
+import 'package:my_first_project/Domain/admission_service.dart';
 import 'package:my_first_project/Util/console_utils.dart';
+// import 'package:my_first_project/Domain/hospital.dart';
 
 class AdmissionConsole {
-  final Hospital hospital;
-  AdmissionConsole(this.hospital);
+  // final Hospital hospital;
+  final AdmissionService admissionService;
+  AdmissionConsole(this.admissionService);
 
   Future<void> viewAllAdmissions() async {
-    if (hospital.admissions.isEmpty) {
+    if (admissionService.admissions.isEmpty) {
       print('No admissions found.');
     } else {
       print('List of Admissions:');
-      for (var admission in hospital.admissions) {
-        print('ID: ${admission.id}, Patient: ${admission.patient}, Room: ${admission.roomNumber}, Bed: ${admission.bedNumber}, Admission Date: ${admission.admissionDate}');
+      for (var admission in admissionService.admissions) {
+        print('----------------------------------------------');
+        print('ID: ${admission.id}, \nPatient: ${admission.patient}, \nRoom: ${admission.roomNumber}, \nBed: ${admission.bedNumber}, \nAdmission Date: ${admission.admissionDate}, \nDischarge Date: ${admission.dischargeDate}, \nTotal Cost: \$${admission.totalPrice}');
+        print('==============================================\n');
       }
     }
     pressEnterToContinue();
@@ -25,7 +29,7 @@ class AdmissionConsole {
       pressEnterToContinue();
       return;
     }
-    await hospital.deleteAdmissionByPatientName(input);
+    await admissionService.deleteAdmissionByPatientName(input);
   }
   Future<void> searchAdmissionsByPatientName() async {
     stdout.write('Enter patient name to search admissions: ');
@@ -35,11 +39,13 @@ class AdmissionConsole {
       pressEnterToContinue();
       return;
     }
-    await hospital.searchAdmission(input);
+    await admissionService.searchAdmission(input);
   }
   Future<void> viewDischargeSummary() async {
-    for (var discharge in hospital.discharges) {
-      print('\nDischarge ID: ${discharge.id}, \nPatient: ${discharge.patient}, \nDischarge Date: ${discharge.dischargeDate}');
+    for (var discharge in admissionService.discharges) {
+      print('------------------------------------------------------');
+      print('\nDischarge ID: ${discharge.id},\nAdmission ID: ${discharge.admissionId}, \nPatient: ${discharge.patient}, \nDischarge Date: ${discharge.dischargeDate}, \nDischarge Reason: ${discharge.dischargeReason}, \nTotal Cost: \$${discharge.totalPrice}, \nStay Duration: ${discharge.nightsStayed} nights');
+      print('======================================================\n');
     }
     pressEnterToContinue();
   }

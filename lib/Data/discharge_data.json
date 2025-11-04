@@ -10,5 +10,17 @@
     "dischargeReason": null,
     "totalPrice": 200.0,
     "nightsStayed": 2
+  },
+  {
+    "id": "a447b4ee-8507-4277-af46-d9b76ba8cf0c",
+    "admissionId": "596b4cee-66fb-46bf-a73f-89d249b52823",
+    "patient": "Lance",
+    "roomNumber": 102,
+    "bedNumber": "102-1",
+    "admissionDate": "2025-11-03T20:25:39.868242",
+    "dischargeDate": "2025-11-03T20:36:33.222133",
+    "dischargeReason": "Patient discharged",
+    "totalPrice": 100.0,
+    "nightsStayed": 1
   }
 ]

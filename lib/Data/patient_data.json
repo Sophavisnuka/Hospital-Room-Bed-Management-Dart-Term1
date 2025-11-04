@@ -20,16 +20,6 @@
     "nights": 2
   },
   {
-    "id": "5d9a6192-b43a-46a6-909c-27375eb429e8",
-    "name": "Roth",
-    "age": 15,
-    "gender": "m",
-    "phone": "123456789",
-    "date of birth": "12-12-2004",
-    "reason": "ss som bek",
-    "nights": 2
-  },
-  {
     "id": "db726cf7-9cc1-400d-acb1-a5cd58e95c1f",
     "name": "ming",
     "age": 12,
@@ -38,5 +28,15 @@
     "date of birth": "15-02-2009",
     "reason": "sick",
     "nights": 2
+  },
+  {
+    "id": "007b2aeb-da4d-4d3e-ac54-8ec0e7f425af",
+    "name": "Lance",
+    "age": 19,
+    "gender": "male",
+    "phone": "095584392",
+    "date of birth": "11-05-2005",
+    "reason": "cancer",
+    "nights": 3
   }
 ]
