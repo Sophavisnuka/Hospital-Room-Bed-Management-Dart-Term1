@@ -153,6 +153,15 @@ class RoomConsole {
       print("Room Number: ${room.roomNumber}");
       print("Room Type: ${room.roomType}");
       print("Base Price: ${room.basePrice}");
+      print("Available Beds: ${room.getAvailableBedCount()}/${room.beds.length}");
+      print("Special Needs Support: ${room.canAccommodateSpecialNeeds() ? 'Yes' : 'No'}");
+      //Show room features
+      print("Features: ${room.getRoomFeatures().join(', ')}");
+      //Show service charges if any
+      double serviceCharge = room.getServiceCharge();
+      if (serviceCharge > 0) {
+        print("Service Charge: \$${serviceCharge.toStringAsFixed(2)} per night");
+      }
       print("Is Available: ${room.isAvailable}");
       print("Beds:");
       for (var bed in room.beds) {

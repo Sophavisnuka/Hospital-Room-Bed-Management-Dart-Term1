@@ -139,10 +139,64 @@ class PatientConsole {
 
   //search patient
   Future<void> findPatientByKeyword() async {
-    stdout.write("========================================");
-    stdout.write("\nEnter keyword to search patient: ");
+    print("========================================");
+    print("Patient Search Options:");
+    print("1. Search by name, phone, or reason");
+    print("2. Search by exact name");
+    print("========================================");
+    stdout.write("Choose search option (1-2): ");
+    String? searchOption = stdin.readLineSync();
+    
+    if (searchOption == null || (searchOption != '1' && searchOption != '2')) {
+      print("Invalid option. Please choose 1 or 2.");
+      return;
+    }
+    
+    stdout.write("Enter search term: ");
     String keyword = stdin.readLineSync()!;
-    patientService.searchPatient(keyword);
+    
+    if (keyword.trim().isEmpty) {
+      print("Search term cannot be empty.");
+      return;
+    }
+    
+    List<Patient> searchResults = [];
+    
+    if (searchOption == '1') {
+      // Search by keyword (name, phone, reason)
+      searchResults = patientService.searchPatient(keyword);
+    } else if (searchOption == '2') {
+      // Search by exact name
+      final patient = patientService.findPatientByName(keyword);
+      if (patient != null) {
+        searchResults = [patient];
+      }
+    }
+    
+    if (searchResults.isEmpty) {
+      print("\nNo patients found matching '$keyword'.");
+      return;
+    }
+    
+    print("\nFound ${searchResults.length} patient(s) matching '$keyword':");
+    print("=========================================================================");
+    
+    for (int i = 0; i < searchResults.length; i++) {
+      final patient = searchResults[i];
+      print("\n--- Patient ${i + 1} ---");
+      print("ID: ${patient.id}");
+      print("Name: ${patient.name}");
+      print("Age: ${patient.age} years old");
+      print("Gender: ${patient.gender}");
+      print("Phone: ${patient.phone ?? 'N/A'}");
+      print("Date of Birth: ${patient.dateOfBirth ?? 'N/A'}");
+      print("Reason for Admission: ${patient.reason ?? 'N/A'}");
+      print("Number of Nights: ${patient.nights ?? 'N/A'}");
+      print("-------------------------");
+    }
+    
+    print("\n Search completed. Found ${searchResults.length} patient(s).");
+    print("=========================================================================");
   }
 
   Future<void> admitPatient() async {
@@ -154,7 +208,7 @@ class PatientConsole {
     stdout.write('Enter bed number to admit to: ');
     String bedNumber = stdin.readLineSync()!;
     DateTime admissionDate = DateTime.now();
-    await admissionService.admitPatient(patientName, roomNumber, bedNumber, admissionDate);
+    await admissionService.admitPatient(patientName: patientName, roomNumber: roomNumber, bedNumber: bedNumber, admissionDate: admissionDate);
   }
 
   Future<void> transferPatient() async {
@@ -185,7 +239,7 @@ class PatientConsole {
     int roomNumber = int.parse(stdin.readLineSync()!);
     stdout.write('Enter bed number: ');
     String bedNumber = stdin.readLineSync()!;
-    await admissionService.dischargePatient(patientName: patientName, roomNumber: roomNumber, bedNumber: bedNumber, dischargeReason: 'Patient discharged');
+    await admissionService.dischargePatient(patientName: patientName, roomNumber: roomNumber, bedNumber: bedNumber, dischargeReason: 'discharged');
   }
 
   Future<void> displayPatientUi() async {

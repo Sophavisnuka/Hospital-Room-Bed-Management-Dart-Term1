@@ -1,6 +1,6 @@
 [
   {
-    "id": "c31bdcea-35bd-4baa-8555-b2877cf232f8",
+    "id": "ea7a2979-4799-4321-83c2-dc976545bff4",
     "roomNumber": 101,
     "roomType": "normal",
     "basePrice": 100.0,
@@ -8,7 +8,7 @@
     "beds": [
       {
         "id": "a6dab46a-a98c-4c18-9576-a1aa0490866a",
-        "status": "available",
+        "status": "occupied",
         "bedNumber": "101-1"
       },
       {
@@ -35,7 +35,7 @@
     "isAvailable": true
   },
   {
-    "id": "555b3426-78d2-4e6b-8579-9c2d2b5cdadb",
+    "id": "074bea81-6841-4f52-bb8c-5c5b5744926e",
     "roomNumber": 102,
     "roomType": "normal",
     "basePrice": 100.0,
@@ -100,7 +100,7 @@
     "isAvailable": true
   },
   {
-    "id": "4e59795b-a7c5-4051-8545-466ebadc6bca",
+    "id": "a6e9e8d8-7634-4b94-934d-cd37e7220d57",
     "roomNumber": 201,
     "roomType": "vip",
     "basePrice": 300.0,

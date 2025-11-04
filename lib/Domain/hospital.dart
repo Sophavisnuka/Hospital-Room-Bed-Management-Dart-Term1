@@ -34,10 +34,10 @@ class Hospital {
     await admissionService.loadDischarges();
     
     // Debug output
-    print('✓ Loaded ${patientService.patients.length} patients');
-    print('✓ Loaded ${roomService.rooms.length} rooms');
-    print('✓ Loaded ${admissionService.admissions.length} admissions');
-    print('✓ Loaded ${admissionService.discharges.length} discharges');
+    print('Loaded ${patientService.patients.length} patients');
+    print('Loaded ${roomService.rooms.length} rooms');
+    print('Loaded ${admissionService.admissions.length} admissions');
+    print('Loaded ${admissionService.discharges.length} discharges');
   }
 
   // Getter methods for easy access (optional)
