@@ -213,7 +213,7 @@ class RoomConsole {
     while (true) {
       // Implementation for displaying the UI
       print("\n=========================================");
-      print("\nroomService Management System - Rooms");
+      print("\nHospital Management System - Rooms");
       print("\n=========================================");
       print("1. View All Rooms");
       print("2. Add New Rooms");
