@@ -105,87 +105,12 @@ class RoomService {
     print('Bed $bedNumber deleted from Room $roomNumber successfully.');
   }
 
-  // Get available rooms
-  List<Room> getAvailableRooms() {
-    return _rooms.where((room) => room.isAvailable).toList();
-  }
-
-  // Get rooms by type
-  List<Room> getRoomsByType(RoomType type) {
-    return _rooms.where((room) => room.roomType == type).toList();
-  }
-
-  // Get available beds in a specific room
-  List<Bed> getAvailableBedsInRoom(int roomNumber) {
-    final room = _findRoomByNumber(roomNumber);
-    return room.beds.where((bed) => bed.getStatus == BedStatus.available).toList();
-  }
-
-  // Find room by number
+  // // Find room by number
   Room? findRoomByNumber(int roomNumber) {
     try {
       return _rooms.firstWhere((r) => r.roomNumber == roomNumber);
     } catch (e) {
       return null;
-    }
-  }
-
-  // Check room availability
-  bool isRoomAvailable(int roomNumber) {
-    final room = findRoomByNumber(roomNumber);
-    return room?.isAvailable ?? false;
-  }
-
-  // Get room capacity
-  int getRoomCapacity(int roomNumber) {
-    final room = _findRoomByNumber(roomNumber);
-    return room.beds.length;
-  }
-
-  // Get occupied bed count in room
-  int getOccupiedBedCount(int roomNumber) {
-    final room = _findRoomByNumber(roomNumber);
-    return room.beds.where((bed) => bed.getStatus == BedStatus.occupied).length;
-  }
-
-  // Get room occupancy rate
-  double getRoomOccupancyRate(int roomNumber) {
-    final room = _findRoomByNumber(roomNumber);
-    if (room.beds.isEmpty) return 0.0;
-    
-    int occupiedBeds = room.beds.where((bed) => bed.getStatus == BedStatus.occupied).length;
-    return occupiedBeds / room.beds.length;
-  }
-
-  // Get total room count
-  int get roomCount => _rooms.length;
-
-  // Get total bed count
-  int get totalBedCount => _rooms.fold(0, (sum, room) => sum + room.beds.length);
-
-  // View all rooms with formatting
-  void viewAllRooms() {
-    if (_rooms.isEmpty) {
-      print("No rooms found.");
-      return;
-    }
-
-    print("\n=======================================================");
-    print("                    ALL ROOMS");
-    print("=======================================================");
-    
-    for (var room in _rooms) {
-      print("\nRoom Number: ${room.roomNumber}");
-      print("Room Type: ${_capitalize(room.roomType.toString().split('.').last)}");
-      print("Base Price: \$${room.basePrice.toStringAsFixed(2)}");
-      print("Is Available: ${room.isAvailable ? 'Yes' : 'No'}");
-      print("Beds (${room.beds.length}):");
-      
-      for (var bed in room.beds) {
-        String statusName = _capitalize(bed.getStatus.toString().split('.').last);
-        print("  - Bed Number: ${bed.bedNumber}, Status: $statusName");
-      }
-      print("-------------------------------------------------------");
     }
   }
 
@@ -240,10 +165,5 @@ class RoomService {
       print('Error saving rooms: $e');
       throw StateError('Failed to save room data');
     }
-  }
-
-  String _capitalize(String text) {
-    if (text.isEmpty) return text;
-    return text[0].toUpperCase() + text.substring(1);
   }
 }

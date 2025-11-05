@@ -25,6 +25,9 @@ class AdmissionService {
           'admission_data.json', (map) => Admission.fromMap(map));
       _admissions.clear();
       _admissions.addAll(loadedAdmissions);
+      
+      //
+      await _cleanupInconsistentData();
     } catch (e) {
       print('Error loading admissions: $e');
     }
@@ -41,8 +44,41 @@ class AdmissionService {
     }
   }
 
+  Future<void> _cleanupInconsistentData() async {
+    bool hasChanges = false;
+    
+    // Move discharged admissions to discharge list
+    final dischargedAdmissions = _admissions.where((a) => a.dischargeDate != null).toList();
+    
+    for (final admission in dischargedAdmissions) {
+      // Create discharge record if it doesn't exist
+      final existingDischarge = _discharges.where((d) => d.admissionId == admission.id).firstOrNull;
+
+      if (existingDischarge == null) {
+        final discharge = Discharge(
+          admission: admission,  // Pass the entire admission object
+          dischargeDate: admission.dischargeDate!,
+          dischargeReason: admission.dischargeReason ?? 'Unknown',
+          nightsStayed: admission.dischargeDate!.difference(admission.admissionDate).inDays,
+        );
+        _discharges.add(discharge);
+        hasChanges = true;
+      }
+      
+      // Remove from admissions
+      _admissions.remove(admission);
+      hasChanges = true;
+    }
+    
+    if (hasChanges) {
+      await _saveAdmissions();
+      await _saveDischarges();
+      print('Cleaned up ${dischargedAdmissions.length} inconsistent admission records');
+    }
+  }
+
   // Admit a patient to a room
-  Future<void> admitPatient(String patientName, int roomNumber, String bedNumber, DateTime admissionDate) async {
+  Future<void> admitPatient({required String patientName, required int roomNumber, required String bedNumber, required DateTime admissionDate}) async {
     // Find and validate patient
     final patient = _patientService.findPatientByName(patientName);
     if (patient == null) {
@@ -54,9 +90,9 @@ class AdmissionService {
       throw ArgumentError('Patient must have a valid number of nights (greater than 0)');
     }
 
-    // Check if patient is already admitted
+    // Check if patient is currently admitted (only active admissions)
     if (_isPatientCurrentlyAdmitted(patientName)) {
-      final currentAdmission = _getCurrentAdmission(patientName);
+      final currentAdmission = _getCurrentActiveAdmission(patientName);
       throw StateError(
           'Patient "$patientName" is already admitted!\n'
           'Current admission: Room ${currentAdmission!.roomNumber}, Bed ${currentAdmission.bedNumber}\n'
@@ -109,9 +145,9 @@ class AdmissionService {
     // Save changes
     _admissions.add(admission);
     await _saveAdmissions();
-    await _roomService.saveRooms(); // Save room changes
+    await _roomService.saveRooms();
 
-    print('\n✓ Patient ${patient.name} admitted successfully!');
+    print('\nPatient ${patient.name} admitted successfully!');
     print('  Room: $roomNumber');
     print('  Bed: $bedNumber');
     print('  Base Price: \$${room.basePrice.toStringAsFixed(2)} per night');
@@ -121,11 +157,23 @@ class AdmissionService {
   }
 
   // Transfer patient between rooms
-  Future<void> transferPatient({required String patientName, required int currentRoomNum, required String currentBedNum, required int newRoomNum, required String newBedNum, required  String transferReason}) async {
+  Future<void> transferPatient({required String patientName, required int currentRoomNum, required String currentBedNum, required int newRoomNum, required String newBedNum, required String transferReason}) async {
     // Find patient
     final patient = _patientService.findPatientByName(patientName);
     if (patient == null) {
       throw StateError('Patient "$patientName" not found');
+    }
+
+    // Find current admission record
+    final currentAdmission = _getCurrentActiveAdmission(patientName);
+    if (currentAdmission == null) {
+      throw StateError('No active admission found for "$patientName"');
+    }
+
+    // Validate the current room/bed matches admission
+    if (currentAdmission.roomNumber != currentRoomNum || currentAdmission.bedNumber != currentBedNum) {
+      throw StateError('Patient "$patientName" is not in Room $currentRoomNum, Bed $currentBedNum. '
+          'Current location: Room ${currentAdmission.roomNumber}, Bed ${currentAdmission.bedNumber}');
     }
 
     // Find current and new rooms
@@ -158,29 +206,26 @@ class AdmissionService {
       throw StateError('New bed $newBedNum is not available. Current status: ${newBed.getStatus.toString().split('.').last}');
     }
 
-    // Find current admission record
-    final currentAdmission = _admissions.where((a) => 
-        a.patient == patientName && 
-        a.roomNumber == currentRoomNum && 
-        a.bedNumber == currentBedNum &&
-        a.dischargeDate == null).firstOrNull;
-    
-    if (currentAdmission == null) {
-      throw StateError('No active admission found for $patientName in room $currentRoomNum');
-    }
-
     // Update bed statuses
     currentBed.setStatus = BedStatus.available;
     newBed.setStatus = BedStatus.occupied;
 
     // Update room availability
-    currentRoom.isAvailable = true; // Current room now has at least one available bed
+    currentRoom.isAvailable = true;
     if (newRoom.beds.every((b) => b.getStatus != BedStatus.available)) {
       newRoom.isAvailable = false;
     }
 
     // Calculate new total price for the new room
     double newTotalPrice = newRoom.calculateTotalCost(patient.nights!);
+
+    // Create discharge record for old admission
+    final transferDischarge = Discharge(
+      admission: currentAdmission,  // Pass the entire admission object
+      dischargeDate: DateTime.now(),
+      dischargeReason: 'Transferred to Room $newRoomNum',
+      nightsStayed: DateTime.now().difference(currentAdmission.admissionDate).inDays,
+    );
 
     // Create new admission record
     final newAdmission = Admission(
@@ -194,18 +239,16 @@ class AdmissionService {
       totalPrice: newTotalPrice,
     );
 
-    // Close the old admission record
-    currentAdmission.dischargeDate = DateTime.now();
-    currentAdmission.dischargeReason = 'Transferred to Room $newRoomNum';
-
-    // Add new admission
+    _admissions.removeWhere((a) => a.id == currentAdmission.id);
     _admissions.add(newAdmission);
+    _discharges.add(transferDischarge);
 
     // Save changes
     await _saveAdmissions();
+    await _saveDischarges();
     await _roomService.saveRooms();
 
-    print('\n✓ Patient $patientName transferred successfully!');
+    print('\nPatient $patientName transferred successfully!');
     print('  From: Room $currentRoomNum, Bed $currentBedNum');
     print('  To: Room $newRoomNum, Bed $newBedNum');
     print('  Reason: $transferReason');
@@ -221,8 +264,8 @@ class AdmissionService {
       throw StateError('Patient "$patientName" not found');
     }
 
-    // Find active admission
-    final admission = _getCurrentAdmission(patientName);
+    //Find active admission
+    final admission = _getCurrentActiveAdmission(patientName);
     if (admission == null) {
       throw StateError('No active admission found for "$patientName"');
     }
@@ -234,29 +277,24 @@ class AdmissionService {
     // Calculate actual nights stayed and final price
     final dischargeDate = DateTime.now();
     final nightsStayed = dischargeDate.difference(admission.admissionDate).inDays;
-    final actualNights = nightsStayed > 0 ? nightsStayed : 1; // Minimum 1 night
+    final actualNights = nightsStayed > 0 ? nightsStayed : 1;
     final finalPrice = room.calculateTotalCost(actualNights);
 
-    // Create discharge record
+    // Update the admission's total price with final calculated price
+    admission.totalPrice = finalPrice;
+
+    // Create discharge record with embedded admission
     final discharge = Discharge(
-      admissionId: admission.id,
-      patient: patientName,
-      roomNumber: admission.roomNumber,
-      bedNumber: admission.bedNumber,
-      admissionDate: admission.admissionDate,
+      admission: admission,  // Pass the entire admission object
       dischargeDate: dischargeDate,
       dischargeReason: dischargeReason,
-      totalPrice: finalPrice,
       nightsStayed: actualNights,
     );
 
     // Update bed status to available
     bed.setStatus = BedStatus.available;
-
-    // Update room availability
     room.isAvailable = true;
 
-    // Remove admission from active list and add to discharge list
     _admissions.removeWhere((a) => a.id == admission.id);
     _discharges.add(discharge);
 
@@ -265,7 +303,7 @@ class AdmissionService {
     await _saveDischarges();
     await _roomService.saveRooms();
 
-    print('\n✓ Patient $patientName discharged successfully!');
+    print('\nPatient $patientName discharged successfully!');
     print('  Room: ${admission.roomNumber}');
     print('  Bed: ${admission.bedNumber}');
     print('  Admission Date: ${admission.admissionDate.toLocal()}');
@@ -299,14 +337,15 @@ class AdmissionService {
         .toList();
   }
 
-  // Private helper methods
+  //Only check active admissions (no dischargeDate)
   bool _isPatientCurrentlyAdmitted(String patientName) {
     return _admissions.any((a) => 
         a.patient.toLowerCase() == patientName.toLowerCase() && 
         a.dischargeDate == null);
   }
 
-  Admission? _getCurrentAdmission(String patientName) {
+  //Get active admission only
+  Admission? _getCurrentActiveAdmission(String patientName) {
     try {
       return _admissions.firstWhere((a) => 
           a.patient.toLowerCase() == patientName.toLowerCase() && 
@@ -315,6 +354,7 @@ class AdmissionService {
       return null;
     }
   }
+
 
   Future<void> _saveAdmissions() async {
     try {

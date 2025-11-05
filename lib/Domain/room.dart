@@ -55,25 +55,20 @@ abstract class Room {
   bool canAccommodateSpecialNeeds();
 
   // Common methods
-  bool isAvailableBed(Bed bed) {
-    return bed.getStatus == BedStatus.available;
-  }
+  // bool isAvailableBed(Bed bed) {
+  //   return bed.getStatus == BedStatus.available;
+  // }
 
-  // Get available bed count
+  // // Get available bed count
   int getAvailableBedCount() {
     return beds.where((bed) => bed.getStatus == BedStatus.available).length;
   }
 
-  // Get occupied bed count
-  int getOccupiedBedCount() {
-    return beds.where((bed) => bed.getStatus == BedStatus.occupied).length;
-  }
+  // // Get occupied bed count
+  // int getOccupiedBedCount() {
+  //   return beds.where((bed) => bed.getStatus == BedStatus.occupied).length;
+  // }
 
-  // Get room occupancy rate
-  double getOccupancyRate() {
-    if (beds.isEmpty) return 0.0;
-    return getOccupiedBedCount() / beds.length;
-  }
   Map<String, dynamic> toMap() {
     return {
       'id': id,

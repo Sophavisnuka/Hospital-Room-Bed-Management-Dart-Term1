@@ -29,20 +29,18 @@ class VIPRoom extends Room {
   @override
   List<String> getRoomFeatures() {
     List<String> features = [
-      'Luxury amenities',
-      'Premium bedding',
       'Large flat-screen TV',
       'Mini-fridge',
       'Room service',
       'High-speed Wi-Fi',
-      'Air conditioning with individual control',
+      'Air conditioning',
     ];
     
     if (hasLounge) {
-      features.add('Private lounge area');
+      features.add('Private lounge');
     }
     if (hasPrivateBathroom) {
-      features.add('Private bathroom with luxury fixtures');
+      features.add('Private bathroom');
     }
     
     return features;

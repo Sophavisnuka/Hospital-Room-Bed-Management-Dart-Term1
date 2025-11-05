@@ -22,5 +22,29 @@
     "dischargeReason": "Patient discharged",
     "totalPrice": 100.0,
     "nightsStayed": 1
+  },
+  {
+    "id": "01cf9bdf-72da-4196-9d61-a0a1b88bedf1",
+    "admissionId": "838f3a02-0ed9-4208-9127-6d3ec51e89c1",
+    "patient": "Nuka",
+    "roomNumber": 101,
+    "bedNumber": "101-1",
+    "admissionDate": "2025-11-03T23:01:28.768110",
+    "dischargeDate": "2025-11-03T23:02:13.898342",
+    "dischargeReason": "Transferred to Room 101",
+    "totalPrice": 200.0,
+    "nightsStayed": 0
+  },
+  {
+    "id": "6eba65f3-3c69-401a-bfbb-42a037ebfa18",
+    "admissionId": "073bdb01-21e2-4613-86be-67eea6e2e644",
+    "patient": "Nuka",
+    "roomNumber": 101,
+    "bedNumber": "101-2",
+    "admissionDate": "2025-11-03T23:02:13.898656",
+    "dischargeDate": "2025-11-03T23:03:27.173011",
+    "dischargeReason": "discharged",
+    "totalPrice": 100.0,
+    "nightsStayed": 1
   }
 ]

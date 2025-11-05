@@ -8,7 +8,7 @@ class Admission {
   final int roomNumber;
   final String bedNumber;
   final DateTime admissionDate;
-  final double totalPrice;
+  double totalPrice;  // Remove final to allow updates
   DateTime? dischargeDate;
   String? dischargeReason;
   String? transferReason;

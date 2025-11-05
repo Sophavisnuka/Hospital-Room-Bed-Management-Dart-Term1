@@ -39,7 +39,52 @@ class AdmissionConsole {
       pressEnterToContinue();
       return;
     }
-    await admissionService.searchAdmission(input);
+    
+    // Get search results and display them
+    final searchResults = admissionService.searchAdmission(input);
+    
+    if (searchResults.isEmpty) {
+      print('\n❌ No admissions found for patient "$input".');
+      pressEnterToContinue();
+      return;
+    }
+    
+    print('\nFound ${searchResults.length} admission(s) for "$input":');
+    print('=========================================================================');
+    
+    for (int i = 0; i < searchResults.length; i++) {
+      final admission = searchResults[i];
+      print('\n--- Admission ${i + 1} ---');
+      print('Admission ID: ${admission.id}');
+      print('Patient: ${admission.patient}');
+      print('Room: ${admission.roomNumber}');
+      print('Bed: ${admission.bedNumber}');
+      print('Admission Date: ${admission.admissionDate.toLocal()}');
+      print('Total Price: \$${admission.totalPrice.toStringAsFixed(2)}');
+      
+      if (admission.dischargeDate != null) {
+        print('Discharge Date: ${admission.dischargeDate!.toLocal()}');
+        print('Status: DISCHARGED');
+      } else {
+        print('Status: ACTIVE');
+      }
+      
+      if (admission.transferReason != null) {
+        print('Transfer Reason: ${admission.transferReason}');
+        if (admission.previousRoomNumber != null) {
+          print('Previous Location: Room ${admission.previousRoomNumber}, Bed ${admission.previousBedNumber}');
+        }
+      }
+      
+      if (admission.dischargeReason != null) {
+        print('Discharge Reason: ${admission.dischargeReason}');
+      }
+      
+      print('-------------------------');
+    }
+    
+    print('\nSearch completed. Found ${searchResults.length} admission(s).');
+    print('=========================================================================');
   }
   Future<void> viewDischargeSummary() async {
     for (var discharge in admissionService.discharges) {

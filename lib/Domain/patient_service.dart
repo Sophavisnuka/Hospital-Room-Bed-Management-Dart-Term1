@@ -80,11 +80,16 @@ class PatientService {
       return [];
     }
 
+    final searchTerm = keyword.toLowerCase();
     final matches = _patients
         .where((p) => 
-            p.name.toLowerCase().contains(keyword.toLowerCase()) ||
-            (p.phone?.toLowerCase().contains(keyword.toLowerCase()) ?? false) ||
-            (p.reason?.toLowerCase().contains(keyword.toLowerCase()) ?? false))
+            p.name.toLowerCase().contains(searchTerm) ||
+            (p.phone?.toLowerCase().contains(searchTerm) ?? false) ||
+            (p.reason?.toLowerCase().contains(searchTerm) ?? false) ||
+            (p.gender.toLowerCase().contains(searchTerm)) ||
+            (p.dateOfBirth?.toLowerCase().contains(searchTerm) ?? false) ||
+            p.age.toString().contains(keyword) ||
+            (p.nights?.toString().contains(keyword) ?? false))
         .toList();
 
     return matches;
@@ -108,14 +113,6 @@ class PatientService {
     }
   }
 
-  // Get patient count
-  int get patientCount => _patients.length;
-
-  // Check if patient exists
-  bool patientExists(String name) {
-    return _patients.any((p) => p.name.toLowerCase() == name.toLowerCase());
-  }
-
   // Private method to save patients
   Future<void> _savePatients() async {
     try {
@@ -124,16 +121,6 @@ class PatientService {
       print('Error saving patients: $e');
       throw StateError('Failed to save patient data');
     }
-  }
-
-  // Get patients by age range
-  List<Patient> getPatientsByAgeRange(int minAge, int maxAge) {
-    return _patients.where((p) => p.age >= minAge && p.age <= maxAge).toList();
-  }
-
-  // Get patients by gender
-  List<Patient> getPatientsByGender(String gender) {
-    return _patients.where((p) => p.gender.toLowerCase() == gender.toLowerCase()).toList();
   }
 
   // Validate patient data
