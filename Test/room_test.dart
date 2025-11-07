@@ -187,22 +187,22 @@ void main() {
 
       test('Should update room price successfully', () async {
         // Arrange
-        final beds = <Bed>[Bed(id: null, bedNumber: "101-1", status: BedStatus.available)];
-        final room = StandardRoom(roomNumber: 101, basePrice: 100.0, beds: beds);
+        final beds = <Bed>[Bed(id: null, bedNumber: "201-1", status: BedStatus.available)];
+        final room = StandardRoom(roomNumber: 201, basePrice: 200.0, beds: beds);
         await roomService.addRoom(room);
 
         // Act
-        final oldPrice = await roomService.editRoomPrice(101, 150.0);
+        final oldPrice = await roomService.editRoomPrice(201, 500.0);
 
         // Assert
-        expect(oldPrice, equals(100.0));
-        expect(roomService.rooms.first.basePrice, equals(150.0));
+        expect(oldPrice, equals(200.0));
+        expect(roomService.rooms.first.basePrice, equals(500.0));
       });
 
       test('Should update bed status successfully', () async {
         // Arrange
         final beds = <Bed>[
-          Bed(id: null, bedNumber: "101-1", status: BedStatus.available),
+          Bed(id: null, bedNumber: "101-1", status: BedStatus.cleaning),
           Bed(id: null, bedNumber: "101-2", status: BedStatus.available),
         ];
         final room = StandardRoom(roomNumber: 101, basePrice: 100.0, beds: beds);

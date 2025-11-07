@@ -1,20 +1,15 @@
 [
   {
-    "id": "913e7d7e-b135-4b9e-b882-08b459c93ca1",
-    "roomNumber": 101,
+    "id": "92ea1fc3-5801-4214-97e2-5c3f8bf0313b",
+    "roomNumber": 201,
     "roomType": "standard",
-    "basePrice": 100.0,
-    "bed quantity": 2,
+    "basePrice": 500.0,
+    "bed quantity": 1,
     "beds": [
       {
-        "id": "42cda38b-9717-43b5-8685-eafdf0065107",
-        "status": "occupied",
-        "bedNumber": "101-1"
-      },
-      {
-        "id": "8a83b8ef-ac41-4beb-9545-ae0453012953",
+        "id": "3f0b8b65-96f4-4941-b061-b7db5ac841bd",
         "status": "available",
-        "bedNumber": "101-2"
+        "bedNumber": "201-1"
       }
     ],
     "isAvailable": true
