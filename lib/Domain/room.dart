@@ -1,20 +1,14 @@
 import 'package:uuid/uuid.dart';
 import 'package:my_first_project/Domain/bed.dart';
 import 'package:my_first_project/Domain/RoomType/standardRoom.dart';
-import 'package:my_first_project/Domain/RoomType/semiPrivateRoom.dart';
-import 'package:my_first_project/Domain/RoomType/privateRoom.dart';
 import 'package:my_first_project/Domain/RoomType/vipRoom.dart';
 import 'package:my_first_project/Domain/RoomType/icuRoom.dart';
-import 'package:my_first_project/Domain/RoomType/maternityRoom.dart';
 import 'package:my_first_project/Domain/RoomType/isolationRoom.dart';
 
 enum RoomType {
   standard,
-  semiPrivate,
-  private,
   vip,
   icu,
-  maternity,
   isolation,
 }
 
@@ -64,20 +58,10 @@ abstract class Room {
   double getServiceCharge();
   bool canAccommodateSpecialNeeds();
 
-  // Common methods
-  // bool isAvailableBed(Bed bed) {
-  //   return bed.getStatus == BedStatus.available;
-  // }
-
   // // Get available bed count
   int getAvailableBedCount() {
     return beds.where((bed) => bed.getStatus == BedStatus.available).length;
   }
-
-  // // Get occupied bed count
-  // int getOccupiedBedCount() {
-  //   return beds.where((bed) => bed.getStatus == BedStatus.occupied).length;
-  // }
 
   Map<String, dynamic> toMap() {
     return {
@@ -97,16 +81,10 @@ abstract class Room {
     switch (type) {
       case RoomType.standard:
         return StandardRoom.fromMap(map);
-      case RoomType.semiPrivate:
-        return SemiPrivateRoom.fromMap(map);
-      case RoomType.private:
-        return PrivateRoom.fromMap(map);
       case RoomType.vip:
         return VIPRoom.fromMap(map);
       case RoomType.icu:
         return ICURoom.fromMap(map);
-      case RoomType.maternity:
-        return MaternityRoom.fromMap(map);
       case RoomType.isolation:
         return IsolationRoom.fromMap(map);
     }

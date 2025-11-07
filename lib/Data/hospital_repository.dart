@@ -2,8 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 class HospitalRepository {
-  static const String _basePath =
-      'Hospital-Room-Bed-Management-Dart-Term1/lib/Data/';
+  static const String _basePath = 'lib/Data/';
 
   Future<void> saveData<T>(String fileName, List<T> items,
       Map<String, dynamic> Function(T) toMap) async {
