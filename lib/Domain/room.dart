@@ -48,14 +48,14 @@ abstract class Room {
 
   // Encapsulated access to basePrice
   double get basePrice => _basePrice;
-  
+
   set price(double newPrice) {
     if (newPrice < 0) {
       throw ArgumentError("Room price cannot be negative.");
     }
     _basePrice = newPrice;
   }
-  
+
   double get price => _basePrice;
 
   // Abstract methods for polymorphism
@@ -92,9 +92,8 @@ abstract class Room {
   }
 
   factory Room.fromMap(Map<String, dynamic> map) {
-    final type = RoomType.values.firstWhere(
-      (e) => e.toString().split('.').last == map['roomType']
-    );
+    final type = RoomType.values
+        .firstWhere((e) => e.toString().split('.').last == map['roomType']);
     switch (type) {
       case RoomType.standard:
         return StandardRoom.fromMap(map);

@@ -77,7 +77,8 @@ class RoomConsole {
         int? bedCount = int.tryParse(stdin.readLineSync()!);
 
         if (bedCount == null || bedCount < 2 || bedCount > 3) {
-          print("\nError: Invalid number of beds. Semi-private rooms must have 2-3 beds.");
+          print(
+              "\nError: Invalid number of beds. Semi-private rooms must have 2-3 beds.");
           return;
         }
 
@@ -164,7 +165,8 @@ class RoomConsole {
         int? bedCount = int.tryParse(stdin.readLineSync()!);
 
         if (bedCount == null || bedCount < 1 || bedCount > 4) {
-          print("\nError: Invalid number of beds. ICU rooms must have 1-4 beds.");
+          print(
+              "\nError: Invalid number of beds. ICU rooms must have 1-4 beds.");
           return;
         }
 
@@ -207,7 +209,8 @@ class RoomConsole {
         int? bedCount = int.tryParse(stdin.readLineSync()!);
 
         if (bedCount == null || bedCount < 1 || bedCount > 2) {
-          print("\nError: Invalid number of beds. Maternity rooms must have 1-2 beds.");
+          print(
+              "\nError: Invalid number of beds. Maternity rooms must have 1-2 beds.");
           return;
         }
 
@@ -243,7 +246,8 @@ class RoomConsole {
 
       case 7: // Isolation Room
         print("\n--- Isolation Room Features ---");
-        stdout.write("Does this room have negative pressure ventilation? (y/n): ");
+        stdout.write(
+            "Does this room have negative pressure ventilation? (y/n): ");
         bool hasNegativePressure = stdin.readLineSync()!.toLowerCase() == 'y';
 
         stdout.write("Does this room have an antechamber? (y/n): ");
@@ -306,39 +310,41 @@ class RoomConsole {
     print("=========================================");
     stdout.write('Enter room number to update: ');
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
-    
+
     if (roomNumber == null) {
       print('\nFinished updating bed statuses.');
       pressEnterToContinue();
       return;
     }
-    
+
     try {
-      final room = roomService.rooms.firstWhere((r) => r.roomNumber == roomNumber);
+      final room =
+          roomService.rooms.firstWhere((r) => r.roomNumber == roomNumber);
       print('\n=========================================');
       print('         Room $roomNumber - Bed List');
       print('=========================================');
       for (var bed in room.beds) {
         String status = bed.getStatus.toString().split('.').last;
-        print('  Bed: ${bed.bedNumber.padRight(15)} Status: ${status.toUpperCase()}');
+        print(
+            '  Bed: ${bed.bedNumber.padRight(15)} Status: ${status.toUpperCase()}');
       }
       print('=========================================');
     } catch (e) {
       print('\nError: Room $roomNumber not found.');
       return;
     }
-    
+
     while (true) {
       print('\n-----------------------------------------');
       stdout.write('Enter bed number to update (or press Enter to finish): ');
       String bedNumber = stdin.readLineSync()!;
-      
+
       // Exit condition: if user presses Enter without input
       if (bedNumber.isEmpty) {
         print('\nFinished updating bed statuses.');
         break;
       }
-      
+
       print('\n--- Select New Bed Status ---');
       print('1. Available');
       print('2. Occupied');
@@ -347,22 +353,26 @@ class RoomConsole {
       print('-----------------------------');
       stdout.write('Your choice: ');
       int? status = int.tryParse(stdin.readLineSync()!);
-      
+
       switch (status) {
         case 1:
-          await roomService.editRoomStatus(roomNumber, bedNumber, BedStatus.available);
+          await roomService.editRoomStatus(
+              roomNumber, bedNumber, BedStatus.available);
           print('\nBed $bedNumber status updated to: AVAILABLE');
           break;
         case 2:
-          await roomService.editRoomStatus(roomNumber, bedNumber, BedStatus.occupied);
+          await roomService.editRoomStatus(
+              roomNumber, bedNumber, BedStatus.occupied);
           print('\nBed $bedNumber status updated to: OCCUPIED');
           break;
         case 3:
-          await roomService.editRoomStatus(roomNumber, bedNumber, BedStatus.cleaning);
+          await roomService.editRoomStatus(
+              roomNumber, bedNumber, BedStatus.cleaning);
           print('\nBed $bedNumber status updated to: CLEANING');
           break;
         case 4:
-          await roomService.editRoomStatus(roomNumber, bedNumber, BedStatus.maintenance);
+          await roomService.editRoomStatus(
+              roomNumber, bedNumber, BedStatus.maintenance);
           print('\nBed $bedNumber status updated to: MAINTENANCE');
           break;
         default:
@@ -378,32 +388,34 @@ class RoomConsole {
       print("=========================================");
       return;
     }
-    
+
     print("\n=========================================");
     print("         All Hospital Rooms");
     print("=========================================");
-    
+
     for (var room in roomService.rooms) {
       print("\n╔═══════════════════════════════════════");
       print("║  ROOM #${room.roomNumber}");
       print("╠═══════════════════════════════════════");
       print("║  Type: ${room.roomType.name.toUpperCase()}");
       print("║  Base Price: \$${room.basePrice.toStringAsFixed(2)}");
-      print("║  Available Beds: ${room.getAvailableBedCount()}/${room.beds.length}");
-      print("║  Special Needs: ${room.canAccommodateSpecialNeeds() ? 'Yes' : 'No'}");
+      print(
+          "║  Available Beds: ${room.getAvailableBedCount()}/${room.beds.length}");
+      print(
+          "║  Special Needs: ${room.canAccommodateSpecialNeeds() ? 'Yes' : 'No'}");
       print("║  Room Available: ${room.isAvailable ? 'Yes' : 'No'}");
-      
+
       double serviceCharge = room.getServiceCharge();
       if (serviceCharge > 0) {
         print("║  Service Charge: \$${serviceCharge.toStringAsFixed(2)}/night");
       }
-      
+
       print("╠═══════════════════════════════════════");
       print("║  Features:");
       for (var feature in room.getRoomFeatures()) {
         print("║    • $feature");
       }
-      
+
       print("╠═══════════════════════════════════════");
       print("║  Beds:");
       for (var bed in room.beds) {
@@ -414,34 +426,35 @@ class RoomConsole {
       print("╚═══════════════════════════════════════");
     }
   }
+
   Future<void> updateRoomPrice() async {
     print("\n=========================================");
     print("          Update Room Price");
     print("=========================================");
     stdout.write('Enter room number: ');
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
-    
+
     if (roomNumber == null) {
       print('\nError: Invalid room number.');
       pressEnterToContinue();
       return;
     }
-    
+
     stdout.write('Enter new price for room $roomNumber: \$');
     double? newPrice = double.tryParse(stdin.readLineSync()!);
-    
+
     if (newPrice == null) {
       print('\nError: Invalid price entered.');
       pressEnterToContinue();
       return;
     }
-    
+
     if (newPrice < 0) {
       print('\nError: Price cannot be negative.');
       pressEnterToContinue();
       return;
     }
-    
+
     try {
       double oldPrice = await roomService.editRoomPrice(roomNumber, newPrice);
       print('\n=========================================');
@@ -454,22 +467,24 @@ class RoomConsole {
       print('\nError: $e');
     }
   }
+
   Future<void> removeRoom() async {
     print("\n=========================================");
     print("            Remove Room");
     print("=========================================");
     stdout.write("Enter room number to remove: ");
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
-    
+
     if (roomNumber == null) {
       print("\nError: Invalid room number.");
       return;
     }
-    
-    print("\nWarning: Are you sure you want to remove room $roomNumber? (y/n): ");
+
+    print(
+        "\nWarning: Are you sure you want to remove room $roomNumber? (y/n): ");
     stdout.write("Confirm: ");
     String? confirm = stdin.readLineSync()?.toLowerCase();
-    
+
     if (confirm == 'y' || confirm == 'yes') {
       await roomService.deleteRoom(roomNumber);
       print("\n=========================================");
@@ -479,25 +494,27 @@ class RoomConsole {
       print("\nRoom removal cancelled.");
     }
   }
+
   Future<void> removeBedFromRoom() async {
     print("\n=========================================");
     print("         Remove Bed from Room");
     print("=========================================");
     stdout.write("Enter room number: ");
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
-    
+
     if (roomNumber == null) {
       print("\nError: Invalid room number.");
       return;
     }
-    
+
     stdout.write("Enter bed number to remove: ");
     String bedNumber = stdin.readLineSync()!;
-    
-    print("\nWarning: Are you sure you want to remove bed $bedNumber from room $roomNumber? (y/n): ");
+
+    print(
+        "\nWarning: Are you sure you want to remove bed $bedNumber from room $roomNumber? (y/n): ");
     stdout.write("Confirm: ");
     String? confirm = stdin.readLineSync()?.toLowerCase();
-    
+
     if (confirm == 'y' || confirm == 'yes') {
       await roomService.deleteBedFromRoom(roomNumber, bedNumber);
       print("\n=========================================");
@@ -507,6 +524,7 @@ class RoomConsole {
       print("\nBed removal cancelled.");
     }
   }
+
   Future<void> displayRoomUi() async {
     while (true) {
       print("\n=========================================");
@@ -524,7 +542,7 @@ class RoomConsole {
       stdout.write('Your choice: ');
       String? input = stdin.readLineSync();
       clearScreen();
-      
+
       switch (input) {
         case '1':
           await viewAllRooms();
@@ -543,7 +561,7 @@ class RoomConsole {
           pressEnterToContinue();
           break;
         case '5':
-          await removeRoom();  
+          await removeRoom();
           pressEnterToContinue();
           break;
         case '6':
