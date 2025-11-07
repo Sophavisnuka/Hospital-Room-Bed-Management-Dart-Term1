@@ -7,11 +7,11 @@ class StandardRoom extends Room {
     required List<Bed> beds,
     double basePrice = 100.0,
   }) : super(
-          roomNumber: roomNumber,
-          roomType: RoomType.standard,
-          basePrice: basePrice,
-          beds: beds,
-        );
+    roomNumber: roomNumber,
+    roomType: RoomType.standard,
+    basePrice: basePrice,
+    beds: beds,
+  );
 
   // Polymorphic implementation for standard room
   @override
@@ -44,7 +44,9 @@ class StandardRoom extends Room {
     final room = StandardRoom(
       roomNumber: map['roomNumber'],
       basePrice: (map['basePrice'] as num?)?.toDouble() ?? 100.0,
-      beds: (map['beds'] as List).map((bedMap) => Bed.fromMap(bedMap)).toList(),
+      beds: (map['beds'] as List)
+          .map((bedMap) => Bed.fromMap(bedMap))
+          .toList(),
     );
     // Set the availability from the map
     room.isAvailable = map['isAvailable'] ?? true;
