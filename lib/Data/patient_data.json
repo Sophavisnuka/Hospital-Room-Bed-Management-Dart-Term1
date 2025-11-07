@@ -1,12 +1,22 @@
 [
   {
-    "id": "0606e8ff-a5c0-4f71-a236-f04077594235",
-    "name": "Nuka",
-    "age": 19,
+    "id": "d10db5e7-004d-40bf-82f8-0fb87473daa5",
+    "name": "Phay Someth",
+    "age": 20,
     "gender": "male",
-    "phone": "016260218",
-    "date of birth": "19-03-2006",
-    "reason": "Checking health",
+    "phone": "0123456789",
+    "date of birth": "06-07-2005",
+    "reason": "Chest Pain",
+    "nights": 2
+  },
+  {
+    "id": "962bb8a6-0331-4b8a-833d-1fe74e05e085",
+    "name": "Ming",
+    "age": 21,
+    "gender": "female",
+    "phone": "0987654321",
+    "date of birth": "10-05-2005",
+    "reason": "sad",
     "nights": 3
   }
 ]

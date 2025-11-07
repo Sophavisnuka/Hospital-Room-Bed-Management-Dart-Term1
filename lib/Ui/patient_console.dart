@@ -12,6 +12,8 @@ class PatientConsole {
   PatientConsole(this.patientService, this.admissionService);
   //register patient
   Future<void> registerPatient() async {
+    print('\n=========================================');
+    print('--------- Register New Patient ----------');
     print('=========================================');
     stdout.write("Enter patient name: ");
     String name = stdin.readLineSync()!;
@@ -46,45 +48,40 @@ class PatientConsole {
 
   //view all patients
   Future<void> viewAllPatients() async {
-    print(
-        "===============================================================================");
-    print(
-        "${_padRight('Name', 25)} ${_padRight('Age', 5)} ${_padRight('Gender', 10)} ${_padRight('Reason', 20)}");
-    print(
-        "===============================================================================");
     if (patientService.patients.isEmpty) {
       print("No patients found.");
       return;
     }
-    for (var p in patientService.patients) {
-      String name = _truncate(p.name, 25);
-      String age = _padRight(p.age.toString(), 5);
-      String gender = _padRight(p.gender, 10);
-      String reason = _truncate(p.reason ?? '', 20);
-      print("$name $age $gender $reason");
+    
+    print("===============================================================================");
+    print("                           ALL REGISTERED PATIENTS");
+    print("===============================================================================");
+    
+    for (int i = 0; i < patientService.patients.length; i++) {
+      var patient = patientService.patients[i];
+      
+      print("\n--- Patient ${i + 1} ---");
+      print("Patient ID: ${patient.id}");
+      print("Name: ${patient.name}");
+      print("Age: ${patient.age} years old");
+      print("Gender: ${patient.gender}");
+      print("Phone: ${patient.phone ?? 'Not provided'}");
+      print("Date of Birth: ${patient.dateOfBirth ?? 'Not provided'}");
+      print("Reason for Admission: ${patient.reason ?? 'Not specified'}");
+      print("Number of Nights: ${patient.nights ?? 'Not specified'}");
+      print("Registration Date: ${DateTime.now().toLocal().toString().split(' ')[0]}");
+      print("-------------------------");
     }
-    print(
-        "===============================================================================");
-  }
-
-  // Helper function to pad right with spaces
-  String _padRight(String text, int width) {
-    if (text.length >= width) {
-      return text.substring(0, width);
-    }
-    return text.padRight(width);
-  }
-
-  // Helper function to truncate text if too long
-  String _truncate(String text, int maxLength) {
-    if (text.length <= maxLength) {
-      return text.padRight(maxLength);
-    }
-    return text.substring(0, maxLength - 3) + '...';
+    
+    print("\nTotal Patients: ${patientService.patients.length}");
+    print("===============================================================================");
   }
 
   //edit patient
   Future<void> editPatient() async {
+    print('\n=========================================');
+    print('--------- Edit Patient Details ----------');
+    print('=========================================');
     stdout.write("Enter patient name to edit: ");
     String name = stdin.readLineSync()!;
 
@@ -132,6 +129,9 @@ class PatientConsole {
 
   //delete patient
   Future<void> deletePatient() async {
+    print('\n=========================================');
+    print('----------- Delete Patient --------------');
+    print('=========================================');
     stdout.write("Enter patient name to delete: ");
     String name = stdin.readLineSync()!;
     await patientService.deletePatient(name);
@@ -139,7 +139,9 @@ class PatientConsole {
 
   //search patient
   Future<void> findPatientByKeyword() async {
-    print("========================================");
+    print('\n=========================================');
+    print('----------- Search Patient --------------');
+    print('=========================================');
     print("Patient Search Options:");
     print("1. Search by name, phone, or reason");
     print("2. Search by exact name");
@@ -201,6 +203,9 @@ class PatientConsole {
 
   Future<void> admitPatient() async {
     // Implementation for admitting a patient
+    print('\n=========================================');
+    print('----------- Admit Patient --------------');
+    print('=========================================');
     stdout.write('Enter patient name to admit: ');
     String patientName = stdin.readLineSync()!;
     stdout.write('Enter room number to admit to: ');
@@ -212,6 +217,9 @@ class PatientConsole {
   }
 
   Future<void> transferPatient() async {
+    print('\n=========================================');
+    print('----------- Transfer Patient -------------');
+    print('=========================================');
     // Implementation for transferring a patient
     stdout.write('Enter patient name to transfer: ');
     String patientName = stdin.readLineSync()!;
@@ -233,6 +241,9 @@ class PatientConsole {
   }
 
   Future<void> dischargePatient() async {
+    print('\n=========================================');
+    print('----------- Discharge Patient -----------');
+    print('=========================================');
     stdout.write('Enter patient name to discharge: ');
     String patientName = stdin.readLineSync()!;
     stdout.write('Enter room number: ');
@@ -245,6 +256,7 @@ class PatientConsole {
   Future<void> displayPatientUi() async {
     // Implementation for displaying the UI
     while (true) {
+      clearScreen();
       print("\n========================================");
       print("patientService Management System - Patients");
       print("========================================");
