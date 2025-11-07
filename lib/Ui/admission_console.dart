@@ -9,6 +9,7 @@ class AdmissionConsole {
   AdmissionConsole(this.admissionService);
 
   Future<void> viewAllAdmissions() async {
+    print("\n================================================");
     if (admissionService.admissions.isEmpty) {
       print('No admissions found.');
     } else {
@@ -22,6 +23,7 @@ class AdmissionConsole {
     pressEnterToContinue();
   }
   Future<void> deleteAdmission() async {
+    print("\n================================================");
     stdout.write('Enter patient name to delete admission: ');
     String? input = stdin.readLineSync();
     if (input == null || input.isEmpty) {
@@ -32,6 +34,7 @@ class AdmissionConsole {
     await admissionService.deleteAdmissionByPatientName(input);
   }
   Future<void> searchAdmissionsByPatientName() async {
+    print("\n================================================");
     stdout.write('Enter patient name to search admissions: ');
     String? input = stdin.readLineSync();
     if (input == null || input.isEmpty) {
@@ -44,7 +47,7 @@ class AdmissionConsole {
     final searchResults = admissionService.searchAdmission(input);
     
     if (searchResults.isEmpty) {
-      print('\n❌ No admissions found for patient "$input".');
+      print('\nNo admissions found for patient "$input".');
       pressEnterToContinue();
       return;
     }
@@ -97,6 +100,7 @@ class AdmissionConsole {
   Future<void> displayAdmissionUi() async {
     while (true) {
       // Implementation for displaying the UI
+      clearScreen();
       print('=========================================');
       print("Hospital Management System - Admissions");
       print('=========================================');

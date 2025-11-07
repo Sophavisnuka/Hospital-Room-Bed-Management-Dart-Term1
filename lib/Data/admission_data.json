@@ -1,15 +1,15 @@
 [
   {
-    "id": "70a03e7d-2beb-4721-bfef-27591403a1ed",
-    "patient": "Nuka",
-    "roomNumber": 101,
-    "bedNumber": "101-1",
-    "admissionDate": "2025-11-04T23:14:32.048691",
+    "id": "2c949f24-6e30-4096-98ef-9f9f84deabce",
+    "patient": "Ming",
+    "roomNumber": 102,
+    "bedNumber": "102-1",
+    "admissionDate": "2025-11-07T12:16:32.869313",
     "dischargeDate": null,
     "dischargeReason": null,
-    "transferReason": null,
-    "previousRoomNumber": null,
-    "previousBedNumber": null,
+    "transferReason": "sss",
+    "previousRoomNumber": 201,
+    "previousBedNumber": "201-1",
     "totalPrice": 300.0
   }
 ]

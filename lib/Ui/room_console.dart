@@ -12,6 +12,7 @@ class RoomConsole {
   RoomConsole(this.roomService);
 
   Future<void> createRoom() async {
+    print("\n================================================");
     // Create a standard room with 4 beds
     print("\n--- Add New Room ---");
 
@@ -84,6 +85,7 @@ class RoomConsole {
   }
 
   Future<void> updateBedStatus() async {
+    print("\n================================================");
     // Implementation for updating a bed status
     stdout.write('Enter room number to update: ');
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
@@ -197,6 +199,7 @@ class RoomConsole {
     }
   }
   Future<void> removeRoom() async {
+    
     // Implementation for removing a room
     stdout.write("Enter room number to remove: ");
     int? roomNumber = int.tryParse(stdin.readLineSync()!);
@@ -221,6 +224,7 @@ class RoomConsole {
   Future<void> displayRoomUi() async {
     while (true) {
       // Implementation for displaying the UI
+      clearScreen();
       print("\n=========================================");
       print("\nHospital Management System - Rooms");
       print("\n=========================================");

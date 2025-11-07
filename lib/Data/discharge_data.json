@@ -1,50 +1,21 @@
 [
   {
-    "id": "3b33fa63-27bf-4ead-9079-17cddc3206d8",
-    "admissionId": "0bdfcc92-27b3-4388-8358-d0452a34b92d",
-    "patient": "Nuka",
-    "roomNumber": 102,
-    "bedNumber": "102-1",
-    "admissionDate": "2025-11-02T20:53:16.006510",
-    "dischargeDate": "2025-11-02T21:45:24.215278",
-    "dischargeReason": null,
-    "totalPrice": 200.0,
-    "nightsStayed": 2
-  },
-  {
-    "id": "a447b4ee-8507-4277-af46-d9b76ba8cf0c",
-    "admissionId": "596b4cee-66fb-46bf-a73f-89d249b52823",
-    "patient": "Lance",
-    "roomNumber": 102,
-    "bedNumber": "102-1",
-    "admissionDate": "2025-11-03T20:25:39.868242",
-    "dischargeDate": "2025-11-03T20:36:33.222133",
-    "dischargeReason": "Patient discharged",
-    "totalPrice": 100.0,
-    "nightsStayed": 1
-  },
-  {
-    "id": "01cf9bdf-72da-4196-9d61-a0a1b88bedf1",
-    "admissionId": "838f3a02-0ed9-4208-9127-6d3ec51e89c1",
-    "patient": "Nuka",
-    "roomNumber": 101,
-    "bedNumber": "101-1",
-    "admissionDate": "2025-11-03T23:01:28.768110",
-    "dischargeDate": "2025-11-03T23:02:13.898342",
-    "dischargeReason": "Transferred to Room 101",
-    "totalPrice": 200.0,
-    "nightsStayed": 0
-  },
-  {
-    "id": "6eba65f3-3c69-401a-bfbb-42a037ebfa18",
-    "admissionId": "073bdb01-21e2-4613-86be-67eea6e2e644",
-    "patient": "Nuka",
-    "roomNumber": 101,
-    "bedNumber": "101-2",
-    "admissionDate": "2025-11-03T23:02:13.898656",
-    "dischargeDate": "2025-11-03T23:03:27.173011",
+    "id": "8cee862f-df9e-4e55-8ef5-311b10ffd12d",
+    "admission": {
+      "id": "a066a1d0-ff61-4664-9b18-d92391b54d8e",
+      "patient": "Phay Someth",
+      "roomNumber": 101,
+      "bedNumber": "101-2",
+      "admissionDate": "2025-11-07T11:59:59.760686",
+      "dischargeDate": null,
+      "dischargeReason": null,
+      "transferReason": "Too Expensive for vip room",
+      "previousRoomNumber": 201,
+      "previousBedNumber": "201-1",
+      "totalPrice": 100.0
+    },
+    "dischargeDate": "2025-11-07T12:00:44.689249",
     "dischargeReason": "discharged",
-    "totalPrice": 100.0,
     "nightsStayed": 1
   }
 ]

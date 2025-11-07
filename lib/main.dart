@@ -7,9 +7,8 @@ import 'Util/console_utils.dart';
 
 Future<void> main() async {
   final hospital = Hospital(name: "City Hospital", address: "123 Main St");
-  
-  // Load existing data from JSON files BEFORE showing menu
   clearScreen();
+  // Load existing data from JSON files BEFORE showing menu
   print('=========================================');
   print('Loading hospital data...');
   await hospital.loadAllData();
@@ -21,6 +20,7 @@ Future<void> main() async {
   RoomConsole roomConsole = RoomConsole(hospital.roomService);
 
   while (true) {
+    clearScreen();
     print('\n=========================================');
     print('Welcome to the Hospital Management System');
     print('=========================================');
