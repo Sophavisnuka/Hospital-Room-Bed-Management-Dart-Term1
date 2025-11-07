@@ -40,13 +40,13 @@ void main() {
           Bed(id: null, bedNumber: "101-1", status: BedStatus.available),
           Bed(id: null, bedNumber: "101-2", status: BedStatus.available),
         ];
-        final room = StandardRoom(roomNumber: 101, basePrice: 100.0, beds: beds);
+        final room = StandardRoom(roomNumber: 102, basePrice: 100.0, beds: beds);
         await roomService.addRoom(room);
 
         // Act
         await admissionService.admitPatient(
           patientName: "Alice Johnson",
-          roomNumber: 101,
+          roomNumber: 102,
           bedNumber: "101-1",
           admissionDate: DateTime(2024, 1, 15),
         );
@@ -67,7 +67,7 @@ void main() {
       test('Should not admit patient if already admitted', () async {
         // Arrange
         final patient = Patient(
-          name: "Bob Wilson",
+          name: "Alice Jackson",
           age: 40,
           gender: "Male",
           phone: "555123456",
@@ -86,16 +86,16 @@ void main() {
 
         // First admission
         await admissionService.admitPatient(
-          patientName: "Bob Wilson",
+          patientName: "Alice Jackson",
           roomNumber: 102,
-          bedNumber: "102-1",
+          bedNumber: "102-2",
           admissionDate: DateTime(2024, 1, 15),
         );
 
         // Act & Assert
         expect(
           () async => await admissionService.admitPatient(
-            patientName: "Bob Wilson",
+            patientName: "Alice Jackson",
             roomNumber: 102,
             bedNumber: "102-2",
             admissionDate: DateTime(2024, 1, 16),
@@ -361,7 +361,7 @@ void main() {
           admissionDate: DateTime(2024, 1, 15),
         );
 
-        // Act
+        //Act
         await admissionService.dischargePatient(
           patientName: "Eve Adams",
           roomNumber: 301,

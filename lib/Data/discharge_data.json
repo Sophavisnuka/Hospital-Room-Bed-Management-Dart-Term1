@@ -1,21 +1,21 @@
 [
   {
-    "id": "8c3acaed-12b6-485c-98b8-9bea2d5fd163",
+    "id": "a6af963f-61ab-4697-a7d5-f93111587b82",
     "admission": {
-      "id": "15c86278-cd58-4f68-b24d-a46bf3e32040",
-      "patient": "Eve Adams",
-      "roomNumber": 301,
-      "bedNumber": "301-1",
+      "id": "86ee41be-8825-4f21-833e-5350e22cd668",
+      "patient": "Charlie Brown",
+      "roomNumber": 201,
+      "bedNumber": "201-1",
       "admissionDate": "2024-01-15T00:00:00.000",
       "dischargeDate": null,
       "dischargeReason": null,
       "transferReason": null,
       "previousRoomNumber": null,
       "previousBedNumber": null,
-      "totalPrice": 66200.0
+      "totalPrice": 400.0
     },
-    "dischargeDate": "2025-11-07T20:54:16.771099",
-    "dischargeReason": "Recovered",
+    "dischargeDate": "2025-11-07T21:40:10.685966",
+    "dischargeReason": "Transferred to Room 202",
     "nightsStayed": 662
   }
 ]

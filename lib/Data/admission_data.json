@@ -1,15 +1,15 @@
 [
   {
-    "id": "ba9560b3-144f-4ca3-8e3e-ff893f050668",
-    "patient": "Bob Wilson",
-    "roomNumber": 102,
-    "bedNumber": "102-1",
-    "admissionDate": "2024-01-15T00:00:00.000",
+    "id": "1b58f7fc-1ca5-40ff-8d0a-d5088bf7b697",
+    "patient": "Charlie Brown",
+    "roomNumber": 202,
+    "bedNumber": "202-1",
+    "admissionDate": "2025-11-07T21:40:10.688786",
     "dischargeDate": null,
     "dischargeReason": null,
-    "transferReason": null,
-    "previousRoomNumber": null,
-    "previousBedNumber": null,
-    "totalPrice": 200.0
+    "transferReason": "Upgrade to VIP",
+    "previousRoomNumber": 201,
+    "previousBedNumber": "201-1",
+    "totalPrice": 1220.0
   }
 ]
