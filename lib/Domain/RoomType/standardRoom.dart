@@ -8,7 +8,7 @@ class StandardRoom extends Room {
     double basePrice = 100.0,
   }) : super(
     roomNumber: roomNumber,
-    roomType: RoomType.normal,
+    roomType: RoomType.standard,
     basePrice: basePrice,
     beds: beds,
   );
