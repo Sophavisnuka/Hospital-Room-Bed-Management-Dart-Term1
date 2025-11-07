@@ -3,11 +3,8 @@ import 'dart:io';
 import 'package:my_first_project/Domain/bed.dart';
 import 'package:my_first_project/Domain/room_service.dart';
 import 'package:my_first_project/Domain/RoomType/standardRoom.dart';
-import 'package:my_first_project/Domain/RoomType/semiPrivateRoom.dart';
-import 'package:my_first_project/Domain/RoomType/privateRoom.dart';
 import 'package:my_first_project/Domain/RoomType/vipRoom.dart';
 import 'package:my_first_project/Domain/RoomType/icuRoom.dart';
-import 'package:my_first_project/Domain/RoomType/maternityRoom.dart';
 import 'package:my_first_project/Domain/RoomType/isolationRoom.dart';
 import 'package:my_first_project/Util/console_utils.dart';
 
@@ -23,12 +20,9 @@ class RoomConsole {
     print("\nSelect room type:");
     print("=========================================");
     print("1. Standard Room (General Ward, 1-12 beds)");
-    print("2. Semi-Private Room (2-3 beds)");
-    print("3. Private Room (1 bed)");
-    print("4. VIP Room (1 bed, premium)");
-    print("5. ICU - Intensive Care Unit (1-4 beds)");
-    print("6. Maternity Room (1-2 beds)");
-    print("7. Isolation Room (1 bed)");
+    print("2. VIP Room (1 bed, premium)");
+    print("3. ICU - Intensive Care Unit (1-4 beds)");
+    print("4. Isolation Room (1 bed)");
     print("=========================================");
     stdout.write("Your choice: ");
     int? typeChoice = int.tryParse(stdin.readLineSync()!);
@@ -72,71 +66,7 @@ class RoomConsole {
         print("=========================================");
         break;
 
-      case 2: // Semi-Private Room
-        stdout.write("Enter number of beds (2-3): ");
-        int? bedCount = int.tryParse(stdin.readLineSync()!);
-
-        if (bedCount == null || bedCount < 2 || bedCount > 3) {
-          print(
-              "\nError: Invalid number of beds. Semi-private rooms must have 2-3 beds.");
-          return;
-        }
-
-        print("\n--- Room Features ---");
-        stdout.write("Does this room have curtain dividers? (y/n): ");
-        bool hasCurtainDividers = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        stdout.write("Does this room have personal lockers? (y/n): ");
-        bool hasPersonalLocker = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        List<Bed> beds = List.generate(
-            bedCount,
-            (i) => Bed(
-                bedNumber: "$roomNumber-${i + 1}",
-                id: null,
-                status: BedStatus.available));
-
-        final semiPrivateRoom = SemiPrivateRoom(
-          roomNumber: roomNumber,
-          beds: beds,
-          hasCurtainDividers: hasCurtainDividers,
-          hasPersonalLocker: hasPersonalLocker,
-        );
-        await roomService.addRoom(semiPrivateRoom);
-        print("\n=========================================");
-        print("Semi-Private Room $roomNumber added successfully!");
-        print("=========================================");
-        break;
-
-      case 3: // Private Room
-        print("\n--- Room Features ---");
-        stdout.write("Does this room have a private bathroom? (y/n): ");
-        bool hasPrivateBathroom = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        stdout.write("Does this room have a TV? (y/n): ");
-        bool hasTV = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        stdout.write("Does this room have a guest chair? (y/n): ");
-        bool hasGuestChair = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        List<Bed> beds = [
-          Bed(bedNumber: "$roomNumber-1", id: null, status: BedStatus.available)
-        ];
-
-        final privateRoom = PrivateRoom(
-          roomNumber: roomNumber,
-          beds: beds,
-          hasPrivateBathroom: hasPrivateBathroom,
-          hasTV: hasTV,
-          hasGuestChair: hasGuestChair,
-        );
-        await roomService.addRoom(privateRoom);
-        print("\n=========================================");
-        print("Private Room $roomNumber added successfully!");
-        print("=========================================");
-        break;
-
-      case 4: // VIP Room
+      case 2: // VIP Room
         print("\n--- VIP Room Features ---");
         stdout.write("Does this VIP room have a lounge? (y/n): ");
         bool hasLounge = stdin.readLineSync()!.toLowerCase() == 'y';
@@ -160,7 +90,7 @@ class RoomConsole {
         print("=========================================");
         break;
 
-      case 5: // ICU Room
+      case 3: // ICU Room
         stdout.write("Enter number of beds (1-4): ");
         int? bedCount = int.tryParse(stdin.readLineSync()!);
 
@@ -204,47 +134,7 @@ class RoomConsole {
         print("=========================================");
         break;
 
-      case 6: // Maternity Room
-        stdout.write("Enter number of beds (1-2): ");
-        int? bedCount = int.tryParse(stdin.readLineSync()!);
-
-        if (bedCount == null || bedCount < 1 || bedCount > 2) {
-          print(
-              "\nError: Invalid number of beds. Maternity rooms must have 1-2 beds.");
-          return;
-        }
-
-        print("\n--- Maternity Room Features ---");
-        stdout.write("Does this room have delivery equipment? (y/n): ");
-        bool hasDeliveryEquipment = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        stdout.write("Does this room have newborn care facilities? (y/n): ");
-        bool hasNewbornCare = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        stdout.write("Does this room have a companion bed? (y/n): ");
-        bool hasCompanionBed = stdin.readLineSync()!.toLowerCase() == 'y';
-
-        List<Bed> beds = List.generate(
-            bedCount,
-            (i) => Bed(
-                bedNumber: "$roomNumber-${i + 1}",
-                id: null,
-                status: BedStatus.available));
-
-        final maternityRoom = MaternityRoom(
-          roomNumber: roomNumber,
-          beds: beds,
-          hasDeliveryEquipment: hasDeliveryEquipment,
-          hasNewbornCare: hasNewbornCare,
-          hasCompanionBed: hasCompanionBed,
-        );
-        await roomService.addRoom(maternityRoom);
-        print("\n=========================================");
-        print("Maternity Room $roomNumber added successfully!");
-        print("=========================================");
-        break;
-
-      case 7: // Isolation Room
+      case 4: // Isolation Room
         print("\n--- Isolation Room Features ---");
         stdout.write(
             "Does this room have negative pressure ventilation? (y/n): ");

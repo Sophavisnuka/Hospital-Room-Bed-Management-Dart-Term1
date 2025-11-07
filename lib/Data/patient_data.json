@@ -1,22 +1,12 @@
 [
   {
-    "id": "d10db5e7-004d-40bf-82f8-0fb87473daa5",
-    "name": "Phay Someth",
-    "age": 20,
-    "gender": "male",
-    "phone": "0123456789",
-    "date of birth": "06-07-2005",
-    "reason": "Chest Pain",
+    "id": "94ce5ca2-96e1-495f-8cfb-cc479e8d9de1",
+    "name": "Bob Wilson",
+    "age": 40,
+    "gender": "Male",
+    "phone": "555123456",
+    "date of birth": "1983-10-20",
+    "reason": "Treatment",
     "nights": 2
-  },
-  {
-    "id": "962bb8a6-0331-4b8a-833d-1fe74e05e085",
-    "name": "Ming",
-    "age": 21,
-    "gender": "female",
-    "phone": "0987654321",
-    "date of birth": "10-05-2005",
-    "reason": "sad",
-    "nights": 3
   }
 ]
