@@ -2,11 +2,13 @@ import 'dart:io';
 import 'dart:convert';
 
 class HospitalRepository {
-  static const String _basePath = 'lib/Data/';
+  static const String _basePath =
+      'Hospital-Room-Bed-Management-Dart-Term1/lib/Data/';
 
-  Future<void> saveData<T>(String fileName, List<T> items, Map<String, dynamic> Function(T) toMap) async {
+  Future<void> saveData<T>(String fileName, List<T> items,
+      Map<String, dynamic> Function(T) toMap) async {
     final file = File('$_basePath$fileName');
-    
+
     // Create directory if it doesn't exist
     if (!file.parent.existsSync()) {
       file.parent.createSync(recursive: true);
@@ -21,7 +23,8 @@ class HospitalRepository {
     }
   }
 
-  Future<List<T>> loadData<T>(String fileName, T Function(Map<String, dynamic>) fromMap) async {
+  Future<List<T>> loadData<T>(
+      String fileName, T Function(Map<String, dynamic>) fromMap) async {
     final file = File('$_basePath$fileName');
     if (!file.existsSync()) {
       return [];

@@ -1,69 +1,105 @@
 [
   {
-    "id": "6695c7d2-d609-45ee-ab58-0a6242ecda5b",
+    "id": "22d154c2-6436-4e0b-9571-c47e6c109594",
     "roomNumber": 101,
-    "roomType": "normal",
+    "roomType": "standard",
     "basePrice": 100.0,
-    "bed quantity": 2,
+    "bed quantity": 12,
     "beds": [
       {
-        "id": "f9ba7829-c9c9-4b3e-8916-945b2cdc3295",
-        "status": "cleaning",
+        "id": "7f7e5a09-e3ee-40a4-b5bc-5931fd7ad611",
+        "status": "available",
         "bedNumber": "101-1"
       },
       {
-        "id": "31c91d0e-a0a2-40ec-b8f2-0d053c17657f",
+        "id": "40c7f33b-5929-4827-acd2-26457dea6834",
         "status": "available",
         "bedNumber": "101-2"
+      },
+      {
+        "id": "9b9094d1-c4d6-40eb-a55c-5d7e6e23ba52",
+        "status": "available",
+        "bedNumber": "101-3"
+      },
+      {
+        "id": "1b120a00-4d53-4d5d-9bc2-16f2db0aa99d",
+        "status": "available",
+        "bedNumber": "101-4"
+      },
+      {
+        "id": "cc1e0915-50f5-44e1-805d-619c92a4680a",
+        "status": "available",
+        "bedNumber": "101-5"
+      },
+      {
+        "id": "0a8977b4-68c1-40af-96f4-7124a644102f",
+        "status": "available",
+        "bedNumber": "101-6"
+      },
+      {
+        "id": "411fcb42-221e-48ef-8094-177166536f1a",
+        "status": "available",
+        "bedNumber": "101-7"
+      },
+      {
+        "id": "7de4d7e8-7386-40f4-b808-93efb1f8cd2f",
+        "status": "available",
+        "bedNumber": "101-8"
+      },
+      {
+        "id": "28ef3928-abd6-44a6-902d-1234168c88a4",
+        "status": "available",
+        "bedNumber": "101-9"
+      },
+      {
+        "id": "ddd89f09-98b0-47f0-8c30-70b70e5e8f91",
+        "status": "available",
+        "bedNumber": "101-10"
+      },
+      {
+        "id": "709b9d49-e6bc-4713-a4cf-1c2432daf784",
+        "status": "available",
+        "bedNumber": "101-11"
+      },
+      {
+        "id": "a5d44a10-a25a-4777-bef1-e72b31648390",
+        "status": "available",
+        "bedNumber": "101-12"
       }
     ],
     "isAvailable": true
   },
   {
-    "id": "ff0e3be4-08be-450e-b8d7-b0719b7f0327",
-    "roomNumber": 102,
-    "roomType": "normal",
-    "basePrice": 100.0,
+    "id": "08da6b48-c495-407d-96a6-074387a867f2",
+    "roomNumber": 105,
+    "roomType": "icu",
+    "basePrice": 500.0,
     "bed quantity": 4,
     "beds": [
       {
-        "id": "865091a7-9760-46cb-a584-867b6d6022d9",
-        "status": "occupied",
-        "bedNumber": "102-1"
+        "id": "a5180335-6b1c-4650-8936-bf877406adf1",
+        "status": "available",
+        "bedNumber": "105-1"
       },
       {
-        "id": "6d9730c7-cdea-442f-b824-5df7a383e19d",
+        "id": "7c443952-f91a-4f04-bf6e-58e6690e09e9",
         "status": "available",
-        "bedNumber": "102-2"
+        "bedNumber": "105-2"
       },
       {
-        "id": "1b381132-75b0-4c32-b0f1-24691096918c",
+        "id": "3dc35db2-0b3a-4ff6-a776-84ceba3f908f",
         "status": "available",
-        "bedNumber": "102-3"
+        "bedNumber": "105-3"
       },
       {
-        "id": "7abc7eb5-dc69-4621-ba87-74d0e8ee972b",
+        "id": "51e54757-4232-4d42-b18d-1e9ce31da0f8",
         "status": "available",
-        "bedNumber": "102-4"
-      }
-    ],
-    "isAvailable": true
-  },
-  {
-    "id": "ce07be6e-b2c8-402e-9eac-3915fd3300e3",
-    "roomNumber": 201,
-    "roomType": "vip",
-    "basePrice": 300.0,
-    "bed quantity": 1,
-    "beds": [
-      {
-        "id": "b6b6de4f-8bfd-47a2-a5d5-659550d51a82",
-        "status": "available",
-        "bedNumber": "201-1"
+        "bedNumber": "105-4"
       }
     ],
     "isAvailable": true,
-    "hasLounge": false,
-    "hasPrivateBathroom": true
+    "hasVentilator": true,
+    "hasCardiacMonitor": true,
+    "nurseToPatientRatio": 2
   }
 ]

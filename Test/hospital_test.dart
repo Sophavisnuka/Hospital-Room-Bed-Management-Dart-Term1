@@ -3,8 +3,8 @@ import 'package:my_first_project/Domain/patient.dart';
 import 'package:my_first_project/Domain/patient_service.dart';
 import 'package:my_first_project/Domain/room_service.dart';
 import 'package:my_first_project/Domain/hospital.dart';
-import 'package:my_first_project/Domain/standardRoom.dart';
-import 'package:my_first_project/Domain/vipRoom.dart';
+import 'package:my_first_project/Domain/RoomType/standardRoom.dart';
+import 'package:my_first_project/Domain/RoomType/vipRoom.dart';
 import 'package:my_first_project/Domain/bed.dart';
 
 void main() {

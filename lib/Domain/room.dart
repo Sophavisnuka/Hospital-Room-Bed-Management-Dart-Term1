@@ -1,11 +1,21 @@
 import 'package:uuid/uuid.dart';
 import 'package:my_first_project/Domain/bed.dart';
-import 'package:my_first_project/Domain/standardRoom.dart';
-import 'package:my_first_project/Domain/vipRoom.dart';
+import 'package:my_first_project/Domain/RoomType/standardRoom.dart';
+import 'package:my_first_project/Domain/RoomType/semiPrivateRoom.dart';
+import 'package:my_first_project/Domain/RoomType/privateRoom.dart';
+import 'package:my_first_project/Domain/RoomType/vipRoom.dart';
+import 'package:my_first_project/Domain/RoomType/icuRoom.dart';
+import 'package:my_first_project/Domain/RoomType/maternityRoom.dart';
+import 'package:my_first_project/Domain/RoomType/isolationRoom.dart';
 
 enum RoomType {
-  normal,
+  standard,
+  semiPrivate,
+  private,
   vip,
+  icu,
+  maternity,
+  isolation,
 }
 
 const uuid = Uuid();
@@ -38,14 +48,14 @@ abstract class Room {
 
   // Encapsulated access to basePrice
   double get basePrice => _basePrice;
-  
+
   set price(double newPrice) {
     if (newPrice < 0) {
       throw ArgumentError("Room price cannot be negative.");
     }
     _basePrice = newPrice;
   }
-  
+
   double get price => _basePrice;
 
   // Abstract methods for polymorphism
@@ -82,14 +92,23 @@ abstract class Room {
   }
 
   factory Room.fromMap(Map<String, dynamic> map) {
-    final type = RoomType.values.firstWhere(
-      (e) => e.toString().split('.').last == map['roomType']
-    );
+    final type = RoomType.values
+        .firstWhere((e) => e.toString().split('.').last == map['roomType']);
     switch (type) {
-      case RoomType.normal:
+      case RoomType.standard:
         return StandardRoom.fromMap(map);
+      case RoomType.semiPrivate:
+        return SemiPrivateRoom.fromMap(map);
+      case RoomType.private:
+        return PrivateRoom.fromMap(map);
       case RoomType.vip:
         return VIPRoom.fromMap(map);
+      case RoomType.icu:
+        return ICURoom.fromMap(map);
+      case RoomType.maternity:
+        return MaternityRoom.fromMap(map);
+      case RoomType.isolation:
+        return IsolationRoom.fromMap(map);
     }
   }
 
